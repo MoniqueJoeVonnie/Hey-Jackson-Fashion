@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import Book from "../components/Book";
-import { books as booksData } from "../data";
 
-const Books = () => {
-  const [books, setBooks] = useState(booksData);
+
+const Books = ( { books: initialBooks } ) => {
+  const [books, setBooks] = useState(initialBooks);
 
   function filterBooks(filter) {
     switch (filter) {
