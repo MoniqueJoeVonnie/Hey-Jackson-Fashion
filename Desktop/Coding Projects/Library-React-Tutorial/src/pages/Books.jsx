@@ -1,9 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Book from "../components/Book";
 
+const Books = ({ books: initialBooks = [] }) => {
+  const [books, setBooks] = useState([]);
 
-const Books = ( { books: initialBooks } ) => {
-  const [books, setBooks] = useState(initialBooks);
+  useEffect(() => {
+    setBooks(initialBooks);
+  }, [initialBooks]);
 
   function filterBooks(filter) {
     switch (filter) {
@@ -32,7 +35,7 @@ const Books = ( { books: initialBooks } ) => {
         break;
 
       default:
-        setBooks(booksData);
+        setBooks(initialBooks);
         break;
     }
   }

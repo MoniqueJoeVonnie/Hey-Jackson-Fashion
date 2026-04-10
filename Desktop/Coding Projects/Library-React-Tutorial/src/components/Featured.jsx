@@ -1,4 +1,4 @@
-import Book from "./ui/Book";
+import Book from "./Book";
 import React from "react";
 import { books } from "../data.js";
 
