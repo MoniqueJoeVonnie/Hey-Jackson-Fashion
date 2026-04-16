@@ -8,17 +8,19 @@ import BookInfo from "./pages/BookInfo";
 import { books } from "./data";
 
 function App() {
+  const addItemToCart = (book) => {
+    console.log("Added to cart:", book);
+  };
+
   return (
     <Router>
       <div className="App">
         <Nav />
-
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/books" element={<Books books={books} />} />
-          <Route path="/books/:id" element={<BookInfo books={books} />} />
+          <Route path="/books/1" element={<BookInfo books={books} />} />
         </Routes>
-
         <Footer />
       </div>
     </Router>
