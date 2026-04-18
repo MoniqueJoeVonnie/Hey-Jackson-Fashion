@@ -25,15 +25,15 @@ const Cart = ({ cart, updateCart, removeItem, totals }) => {
                       <div className="cart__book">
                         <img
                           className="cart__book--img"
-                          src={item.url}
+                          src="https://m.media-amazon.com/images/I/61mIq2iJUXL._AC_UF1000,1000_QL80_.jpg"
                           alt=""
                         />
                         <div className="cart__book--info">
                           <span className="cart__book--title">
-                            {item.title}
+                            Crack the Coding Interview
                           </span>
                           <span className="cart__book--price">
-                            ${itemPrice.toFixed(2)}
+                            $10.00
                           </span>
                           <button
                             className="cart__book--remove"
@@ -56,7 +56,7 @@ const Cart = ({ cart, updateCart, removeItem, totals }) => {
                         />
                       </div>
                       <div className="cart__total">
-                        ${(itemPrice * item.quantity).toFixed(2)}
+                        $10.00
                       </div>
                     </div>
                   );
@@ -77,15 +77,15 @@ const Cart = ({ cart, updateCart, removeItem, totals }) => {
               <div className="total">
                 <div className="total__item total__sub-total">
                   <span>Subtotal</span>
-                  <span>${totals.subtotal.toFixed(2)}</span>
+                  <span>$9.00</span>
                 </div>
                 <div className="total__item total__tax">
                   <span>Tax</span>
-                  <span>${totals.tax.toFixed(2)}</span>
+                  <span>$1.00</span>
                 </div>
                 <div className="total__item total__price">
                   <span>Total</span>
-                  <span>${totals.total.toFixed(2)}</span>
+                  <span>$10.00</span>
                 </div>
                 <button className="btn btn__checkout no-cursor" onClick={() => alert(`Haven't got around to doing this :(`)}>
                   Proceed to checkout

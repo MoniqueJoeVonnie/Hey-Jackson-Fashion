@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Ratings from "./Ratings";
-import Price from "../components/ui/Price";
+import Price from "./Price";
 
 const Book = ({ book }) => {
   if (!book) return null;
