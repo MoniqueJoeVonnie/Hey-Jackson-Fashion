@@ -1,11 +1,19 @@
 import React, { useEffect, useState } from "react";
-import Book from "../components/Book";
+import Book from "../components/ui/Book";
 
 const Books = ({ books: initialBooks = [] }) => {
   const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setBooks(initialBooks);
+    setLoading(true);
+
+    const timer = setTimeout(() => {
+      setBooks(initialBooks);
+      setLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
   }, [initialBooks]);
 
   function filterBooks(filter) {
@@ -55,6 +63,7 @@ const Books = ({ books: initialBooks = [] }) => {
                   id="filter"
                   onChange={(event) => filterBooks(event.target.value)}
                   defaultValue="DEFAULT"
+                  disabled={loading}
                 >
                   <option value="DEFAULT" disabled>
                     Sort
@@ -66,9 +75,16 @@ const Books = ({ books: initialBooks = [] }) => {
               </div>
 
               <div className="books">
-                {books.map((book) => (
-                  <Book book={book} key={book.id} />
-                ))}
+                {loading
+                  ? new Array(8).fill(0).map((_, index) => (
+                      <div className="book skeleton__book" key={index}>
+                        <div className="skeleton skeleton__img"></div>
+                        <div className="skeleton skeleton__title"></div>
+                        <div className="skeleton skeleton__rating"></div>
+                        <div className="skeleton skeleton__price"></div>
+                      </div>
+                    ))
+                  : books.map((book) => <Book book={book} key={book.id} />)}
               </div>
             </div>
           </div>

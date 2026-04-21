@@ -1,6 +1,6 @@
 import "./index.css";
 import Footer from "./components/Footer";
-import { useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import Nav from "./components/Nav";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
@@ -11,82 +11,116 @@ import { books } from "./data";
 
 function App() {
   const [cart, setCart] = useState([]);
+  const TAX_RATE = 0.1;
 
-  // ✅ ADD THIS FUNCTION (this is what you're missing)
+  const getBookPrice = (book) => {
+    return book.salePrice ?? book.originalPrice;
+  };
+
   const addItemToCart = (book) => {
-    const existingItem = cart.find((item) => item.id === book.id);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === book.id);
 
-    if (existingItem) {
-      setCart(
-        cart.map((item) =>
+      if (existingItem) {
+        return prevCart.map((item) =>
           item.id === book.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
-        )
-      );
-    } else {
-      setCart([...cart, { ...book, quantity: 1 }]);
-    }
+        );
+      }
+
+      return [...prevCart, { ...book, quantity: 1 }];
+    });
   };
 
   const updateCart = (book, quantity) => {
-    setCart(
-      cart.map((item) =>
+    const parsedQuantity = Number(quantity);
+
+    if (Number.isNaN(parsedQuantity)) return;
+
+    if (parsedQuantity <= 0) {
+      removeItem(book);
+      return;
+    }
+
+    setCart((prevCart) =>
+      prevCart.map((item) =>
         item.id === book.id
-          ? { ...item, quantity: Number(quantity) }
+          ? { ...item, quantity: Math.min(parsedQuantity, 99) }
           : item
       )
     );
   };
 
-  const removeItem = (book) => {
-    setCart(cart.filter((item) => item.id !== book.id));
+  const increaseQuantity = (book) => {
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item.id === book.id
+          ? { ...item, quantity: Math.min(item.quantity + 1, 99) }
+          : item
+      )
+    );
   };
 
-  const totals = {
-    subtotal: cart.reduce(
-      (total, item) =>
-        total + (item.salePrice || item.originalPrice) * item.quantity,
-      0
-    ),
-    tax: cart.reduce(
-      (total, item) =>
-        total + (item.salePrice || item.originalPrice) * item.quantity * 0.1,
-      0
-    ),
-    total: cart.reduce(
-      (total, item) =>
-        total + (item.salePrice || item.originalPrice) * item.quantity * 1.1,
-      0
-    ),
+  const decreaseQuantity = (book) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) =>
+          item.id === book.id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
   };
+
+  const removeItem = (book) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== book.id));
+  };
+
+  const totals = useMemo(() => {
+    const subtotal = cart.reduce((total, item) => {
+      return total + getBookPrice(item) * item.quantity;
+    }, 0);
+
+    const tax = subtotal * TAX_RATE;
+    const total = subtotal + tax;
+
+    return {
+      subtotal,
+      tax,
+      total,
+    };
+  }, [cart]);
 
   return (
     <Router>
       <div className="App">
-        <Nav />
+        <Nav cart={cart} />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/books" element={<Books books={books} />} />
-          
-          {/* ✅ FIXED */}
+          <Route
+            path="/books"
+            element={<Books books={books} addItemToCart={addItemToCart} />}
+          />
           <Route
             path="/books/:id"
             element={
               <BookInfo
                 books={books}
+                cart={cart}
                 addItemToCart={addItemToCart}
               />
             }
           />
-
-          {/* ✅ FIXED (you were passing books instead of cart) */}
           <Route
             path="/cart"
             element={
               <Cart
                 cart={cart}
                 updateCart={updateCart}
+                increaseQuantity={increaseQuantity}
+                decreaseQuantity={decreaseQuantity}
                 removeItem={removeItem}
                 totals={totals}
               />

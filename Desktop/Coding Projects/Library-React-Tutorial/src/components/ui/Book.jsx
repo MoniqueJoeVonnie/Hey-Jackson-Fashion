@@ -3,14 +3,12 @@ import { Link } from "react-router-dom";
 import Ratings from "./Ratings";
 import Price from "./Price";
 
-const Book = ({ book }) => {
-  if (!book) return null;
-
+const Book = ({ book, addItemToCart }) => {
   return (
     <div className="book">
       <Link to={`/books/${book.id}`}>
         <figure className="book__img--wrapper">
-          <img src={book.url} alt={book.title} className="book__img" />
+          <img className="book__img" src={book.url} alt={book.title} />
         </figure>
       </Link>
 
@@ -21,10 +19,17 @@ const Book = ({ book }) => {
       </div>
 
       <Ratings rating={book.rating} />
-      <Price
-        originalPrice={book.originalPrice}
-        salePrice={book.salePrice}
-      />
+
+      <div className="book__price">
+        <Price
+          originalPrice={book.originalPrice}
+          salePrice={book.salePrice}
+        />
+      </div>
+
+      <button className="btn" onClick={() => addItemToCart(book)}>
+        Add to Cart
+      </button>
     </div>
   );
 };

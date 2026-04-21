@@ -8,7 +8,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import LibraryLogo from "../assets/Library.svg";
 
-const Nav = () => {
+const Nav = ({ cart = [] }) => {
+  const cartQuantity = cart.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   function openMenu() {
     document.body.classList.add("menu--open");
   }
@@ -41,7 +46,9 @@ const Nav = () => {
             <Link to="/cart" className="nav__link">
               <FontAwesomeIcon icon={faShoppingCart} />
             </Link>
-            <span className="cart__length">2</span>
+            {cartQuantity > 0 && (
+              <span className="cart__length">{cartQuantity}</span>
+            )}
           </li>
         </ul>
 
@@ -56,18 +63,18 @@ const Nav = () => {
 
           <ul className="menu__links">
             <li className="menu__list">
-              <Link to="/" className="menu__link">
+              <Link to="/" className="menu__link" onClick={closeMenu}>
                 Home
               </Link>
             </li>
             <li className="menu__list">
-              <Link to="/books" className="menu__link">
+              <Link to="/books" className="menu__link" onClick={closeMenu}>
                 Books
               </Link>
             </li>
             <li className="menu__list">
-              <Link to="/cart" className="menu__link">
-                Cart
+              <Link to="/cart" className="menu__link" onClick={closeMenu}>
+                Cart {cartQuantity > 0 ? `(${cartQuantity})` : ""}
               </Link>
             </li>
           </ul>

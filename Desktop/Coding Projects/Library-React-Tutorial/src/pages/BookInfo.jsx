@@ -1,17 +1,53 @@
-import React, { useState } from "react";
+import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Ratings from "../components/ui/Ratings";
 import Price from "../components/ui/Price";
 import Book from "../components/ui/Book";
 
-const BookInfo = ({ books = [], addItemToCart }) => {
+const BookInfo = ({ books = [], cart = [], addItemToCart }) => {
   const { id } = useParams();
   const book = books.find((book) => Number(book.id) === Number(id));
-  const [added, setAdded] = useState(false);
+  const isLoading = books.length === 0;
 
-  function addBookToCart(book) {
-    addItemToCart(book);
+  function bookExistsOnCart() {
+    return cart.find((item) => Number(item.id) === Number(id));
+  }
+
+  if (isLoading) {
+    return (
+      <div id="books__body">
+        <main id="books__main">
+          <div className="books__container">
+            <div className="row">
+              <div className="book__selected--top">
+                <Link to="/books" className="book__link">
+                  <FontAwesomeIcon icon="arrow-left" />
+                </Link>
+                <Link to="/books" className="book__link">
+                  <h2 className="book__selected--title--top">Books</h2>
+                </Link>
+              </div>
+
+              <div className="book__selected">
+                <figure className="book__selected--figure">
+                  <div className="skeleton skeleton__book-info--img"></div>
+                </figure>
+
+                <div className="book__selected--description">
+                  <div className="skeleton skeleton__book-info--title"></div>
+                  <div className="skeleton skeleton__book-info--rating"></div>
+                  <div className="skeleton skeleton__book-info--price"></div>
+                  <div className="skeleton skeleton__book-info--text"></div>
+                  <div className="skeleton skeleton__book-info--text short"></div>
+                  <div className="skeleton skeleton__book-info--button"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
   }
 
   if (!book) {
@@ -83,17 +119,24 @@ const BookInfo = ({ books = [], addItemToCart }) => {
                   <p className="book__summary--para">
                     Lorem ipsum dolor sit amet consectetur adipisicing elit.
                     Veniam, repellendus modi odio porro, consequuntur,
-                    asperiores minima sint voluptatem at reiciendis ducimus
-                    neque provident alias iure nihil explicabo nobis id voluptas.
+                    asperiores minima sint voluptatem at reiciendis ducimus.
                   </p>
-                </div>
 
-                <button
-                  className="btn"
-                  onClick={() => addBookToCart && addBookToCart(book)}
-                >
-                  Add to Cart
-                </button>
+                  <div className="book__summary--actions">
+                    {bookExistsOnCart() ? (
+                      <Link to="/cart">
+                        <button className="btn">Checkout</button>
+                      </Link>
+                    ) : (
+                      <button
+                        className="btn"
+                        onClick={() => addItemToCart(book)}
+                      >
+                        Add to Cart
+                      </button>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
