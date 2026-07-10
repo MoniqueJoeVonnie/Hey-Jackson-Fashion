@@ -2,6 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { products } from "../data/products";
 import { useState, useEffect } from "react";
 import "../styles/ProductDetail.css";
+import { useCart } from "../context/CartContext";
 
 function ProductDetail() {
   const { productId } = useParams();
@@ -11,13 +12,20 @@ function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState("");
   const [selectedImage, setSelectedImage] = useState("");
 
+  const { addToCart } = useCart();
+
   useEffect(() => {
     if (!product) return;
 
+    setSelectedSize("");
+
     if (product.variants?.length) {
       setSelectedColor(product.variants[0].name);
-      setSelectedImage(product.variants[0].gallery?.[0] || product.image);
+      setSelectedImage(
+        product.variants[0].gallery?.[0] || product.image
+      );
     } else {
+      setSelectedColor("");
       setSelectedImage(product.image);
     }
   }, [product]);
@@ -25,6 +33,20 @@ function ProductDetail() {
   const selectedVariant = product?.variants?.find(
     (variant) => variant.name === selectedColor
   );
+
+  const handleAddToCart = () => {
+    if (product.sizes?.length && !selectedSize) {
+      alert("Please select a size before adding this item to your cart.");
+      return;
+    }
+
+    addToCart(
+      product,
+      selectedColor,
+      selectedSize,
+      selectedImage
+    );
+  };
 
   useEffect(() => {
     if (selectedVariant?.gallery?.length) {
@@ -73,7 +95,7 @@ function ProductDetail() {
           <h2>{product.price}</h2>
           <p>{product.description}</p>
 
-          {product.variants && (
+          {product.variants?.length > 0 && (
             <>
               <label>Color: {selectedVariant?.name}</label>
 
@@ -94,7 +116,7 @@ function ProductDetail() {
             </>
           )}
 
-          {product.sizes && (
+          {product.sizes?.length > 0 && (
             <>
               <label>Size</label>
 
@@ -114,7 +136,12 @@ function ProductDetail() {
             </>
           )}
 
-          <button>Add to Cart</button>
+          <button
+            className="add-to-cart-btn"
+            onClick={handleAddToCart}
+          >
+            Add to Cart
+          </button>
         </div>
       </div>
 

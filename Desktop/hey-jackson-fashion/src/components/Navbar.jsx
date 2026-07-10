@@ -1,7 +1,11 @@
+import { Link } from "react-router-dom";
 import logo from "../assets/logo.png";
 import "./Navbar.css";
+import { useCart } from "../context/CartContext";
 
 function Navbar() {
+  const { cartCount } = useCart();
+
   return (
     <header className="top-bar">
       <div className="logo-box">
@@ -9,10 +13,24 @@ function Navbar() {
       </div>
 
       <nav className="nav-links">
-        <a href="#">Home</a>
-        <a href="#">Shop</a>
-        <a href="#">Contact</a>
-        <a href="#">🛒 Cart</a>
+        <Link to="/">Home</Link>
+
+        <Link to="/products">
+          Shop
+        </Link>
+
+        <Link to="/contact">
+          Contact
+        </Link>
+
+        <Link to="/cart">
+          🛒 Cart
+          {cartCount > 0 && (
+            <span className="cart-count">
+              {cartCount}
+            </span>
+          )}
+        </Link>
       </nav>
     </header>
   );
