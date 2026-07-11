@@ -183,12 +183,42 @@ function Cart() {
             <aside className="cart-summary">
               <h2>Order Summary</h2>
 
-              {shipping === 0 && (
-                <div className="free-shipping-badge">
+              <div className="shipping-progress">
+                <div className="shipping-progress-message">
                     <span aria-hidden="true">🚚</span>
-                    Free Shipping Unlocked
+
+                    {shipping === 0 ? (
+                    <strong>Free Shipping Unlocked</strong>
+                    ) : (
+                    <span>
+                        Add{" "}
+                        <strong>
+                        ${amountUntilFreeShipping.toFixed(2)}
+                        </strong>{" "}
+                        more for free shipping
+                    </span>
+                    )}
                 </div>
-                )}
+
+                <div
+                    className="shipping-progress-track"
+                    role="progressbar"
+                    aria-label="Free shipping progress"
+                    aria-valuemin="0"
+                    aria-valuemax={freeShippingThreshold}
+                    aria-valuenow={Math.min(
+                    subtotal,
+                    freeShippingThreshold
+                    )}
+                >
+                    <div
+                    className="shipping-progress-fill"
+                    style={{
+                        width: `${freeShippingProgress}%`,
+                    }}
+                    />
+                </div>
+                </div>
 
               <div className="summary-row">
                 <span>Quantity</span>
@@ -232,6 +262,13 @@ function Cart() {
                 <span aria-hidden="true">🔒</span>
                 Secure and encrypted checkout
                 </p>
+
+                <div className="payment-methods" aria-label="Accepted payment methods">
+                    <span className="payment-method">Visa</span>
+                    <span className="payment-method">Mastercard</span>
+                    <span className="payment-method">Amex</span>
+                    <span className="payment-method">PayPal</span>
+                </div>
 
                 <Link
                 to="/products"

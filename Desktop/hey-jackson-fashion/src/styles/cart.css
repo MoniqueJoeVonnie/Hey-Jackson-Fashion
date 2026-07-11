@@ -389,10 +389,38 @@
   font-weight: 600;
 }
 
+/* =========================
+   PAYMENT METHODS
+========================= */
+
+.payment-methods {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 12px;
+}
+
+.payment-method {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid rgba(75, 40, 95, 0.14);
+  border-radius: 7px;
+  background: #ffffff;
+  color: #4b285f;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  box-shadow: 0 3px 8px rgba(75, 40, 95, 0.06);
+}
+
 .continue-shopping-link {
   display: block;
   width: 100%;
-  margin-top: 16px;
+  margin-top: 18px;
   padding: 13px 20px;
   border: 2px solid #5b1793;
   border-radius: 999px;
@@ -488,19 +516,42 @@
   box-shadow: 0 13px 24px rgba(24, 167, 170, 0.3);
 }
 
-.free-shipping-badge {
-  display: inline-flex;
+/* =========================
+   FREE SHIPPING PROGRESS
+========================= */
+
+.shipping-progress {
+  margin: -6px 0 30px;
+  padding: 14px 15px;
+  border: 1px solid rgba(24, 167, 170, 0.2);
+  border-radius: 16px;
+  background: #eefafa;
+}
+
+.shipping-progress-message {
+  display: flex;
   align-items: center;
   gap: 8px;
-  margin: -8px 0 22px;
-  padding: 8px 13px;
-  border: 1px solid rgba(24, 167, 170, 0.2);
-  border-radius: 999px;
-  background: #e9fafa;
   color: #147f82;
-  font-size: 0.85rem;
-  font-weight: 800;
-  letter-spacing: 0.2px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.shipping-progress-track {
+  width: 100%;
+  height: 8px;
+  margin-top: 11px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(24, 167, 170, 0.15);
+}
+
+.shipping-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: #18a7aa;
+  transition: width 0.35s ease;
 }
 
 
