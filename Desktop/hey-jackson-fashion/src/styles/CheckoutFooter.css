@@ -1,0 +1,58 @@
+.checkout-footer {
+  margin-top: auto;
+  padding: 34px 7%;
+  background: #4b285f;
+  border-top: 4px solid #18a7aa;
+}
+
+.checkout-footer-container {
+  width: min(1200px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.checkout-footer-help {
+  margin: 0 0 18px;
+  font-family: "Unica One", sans-serif;
+  font-size: 1.35rem;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+}
+
+.checkout-footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 14px 28px;
+  margin-bottom: 22px;
+}
+
+.checkout-footer-links a {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.checkout-footer-links a:hover {
+  color: #18a7aa;
+}
+
+.checkout-footer-copyright {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (max-width: 600px) {
+  .checkout-footer {
+    padding: 30px 5%;
+  }
+
+  .checkout-footer-links {
+    gap: 12px 20px;
+  }
+}

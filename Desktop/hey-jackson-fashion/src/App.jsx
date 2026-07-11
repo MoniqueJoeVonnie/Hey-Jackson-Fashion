@@ -20,6 +20,7 @@ import ProductDetail from "./Pages/ProductDetail";
 import CategoryPage from "./Pages/CategoryPage";
 import ProductPage from "./Pages/Product";
 import Cart from "./Pages/Cart";
+import Checkout from "./Pages/Checkout";
 
 
 function App() {
@@ -46,14 +47,13 @@ useEffect(() => {
   ];
 
   return (
-  <>
-    <Navbar />
-
+    <>
     <Routes>
       <Route
         path="/"
         element={
           <>
+            <Navbar />
             <Hero />
 
             <div className={`scroll-guide ${hideScrollGuide ? "hidden" : ""}`}>
@@ -243,10 +243,51 @@ useEffect(() => {
           }
         />
 
-        <Route path="/products" element={<ProductPage />} />
-        <Route path="/products/category/:categoryName" element={<CategoryPage />} />
-        <Route path="/products/:productId" element={<ProductDetail />} />
-        <Route path="/cart" element={<Cart />} />
+          <Route
+            path="/products"
+            element={
+              <>
+                <Navbar />
+                <ProductPage />
+              </>
+            }
+          />
+
+          <Route
+            path="/products/category/:categoryName"
+            element={
+              <>
+                <Navbar />
+                <CategoryPage />
+              </>
+            }
+          />
+
+          <Route
+            path="/products/:productId"
+            element={
+              <>
+                <Navbar />
+                <ProductDetail />
+              </>
+            }
+          />
+
+          <Route
+            path="/cart"
+            element={
+              <>
+                <Navbar />
+                <Cart />
+              </>
+            }
+          />
+
+          <Route
+            path="/checkout"
+            element={<Checkout />}
+          />
+
       </Routes>
     </>
   );
