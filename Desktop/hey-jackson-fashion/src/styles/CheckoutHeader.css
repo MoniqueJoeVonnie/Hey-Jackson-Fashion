@@ -1,0 +1,70 @@
+.checkout-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(75, 40, 95, 0.12);
+}
+
+.checkout-header-container {
+  width: min(1400px, 100%);
+  margin: 0 auto;
+  padding: 18px 7%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+.checkout-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.checkout-logo img {
+  display: block;
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+}
+
+.checkout-title {
+  text-align: right;
+}
+
+.checkout-title h1 {
+  margin: 0;
+  font-family: "Unica One", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #4b285f;
+}
+
+.checkout-title p {
+  margin: 7px 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: #6f6674;
+}
+
+@media (max-width: 650px) {
+  .checkout-header-container {
+    padding: 14px 5%;
+    gap: 18px;
+  }
+
+  .checkout-logo img {
+    width: 82px;
+    height: 82px;
+  }
+
+  .checkout-title h1 {
+    font-size: 1.55rem;
+  }
+
+  .checkout-title p {
+    display: none;
+  }
+}
