@@ -17,6 +17,76 @@
   font-family: "Poppins", sans-serif;
 }
 
+.checkout-progress {
+  width: min(900px, 100%);
+  margin: 0 auto 55px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.checkout-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 155px;
+  color: #9b929f;
+}
+
+.checkout-step-number {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #d7d0da;
+  border-radius: 50%;
+
+  background: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #9b929f;
+}
+
+.checkout-step-label {
+  margin: 0 0 2px;
+  font-family: "Unica One", sans-serif;
+  font-size: 1.15rem;
+  letter-spacing: 1px;
+  color: inherit;
+}
+
+.checkout-step small {
+  display: block;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.72rem;
+  white-space: nowrap;
+  color: inherit;
+}
+
+.checkout-step.active {
+  color: #4b285f;
+}
+
+.checkout-step.active .checkout-step-number {
+  border-color: #18a7aa;
+  background: #18a7aa;
+  color: #ffffff;
+  box-shadow: 0 7px 18px rgba(24, 167, 170, 0.22);
+}
+
+.checkout-progress-line {
+  width: clamp(40px, 8vw, 110px);
+  height: 2px;
+  margin: 0 16px;
+  background: #d7d0da;
+}
+
 .checkout-main > h1 {
   margin: 0 0 45px;
   text-align: center;
@@ -48,6 +118,571 @@
   color: #6f6674;
 }
 
+.checkout-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(300px, 0.75fr);
+  align-items: start;
+  gap: 32px;
+}
+
+.shipping-card,
+.checkout-summary-card {
+  background: #ffffff;
+  border: 1px solid rgba(75, 40, 95, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(75, 40, 95, 0.1);
+}
+
+.shipping-card {
+  padding: 42px;
+}
+
+.shipping-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 34px;
+}
+
+.checkout-eyebrow {
+  margin: 0 0 7px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: #18a7aa;
+}
+
+.shipping-card h2,
+.checkout-summary-card h2 {
+  margin: 0;
+  font-family: "Unica One", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: #4b285f;
+}
+
+.required-note {
+  margin: 5px 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.78rem;
+  color: #817887;
+  white-space: nowrap;
+}
+
+.required-note span,
+.form-group label span {
+  color: #d84f72;
+}
+
+.shipping-form {
+  display: grid;
+  gap: 21px;
+}
+
+.form-row {
+  display: grid;
+  gap: 20px;
+}
+
+.form-row.two-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.location-row {
+  grid-template-columns: minmax(0, 1.35fr) minmax(150px, 0.8fr) minmax(
+      125px,
+      0.65fr
+    );
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.form-group label {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #4b285f;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  min-height: 52px;
+  padding: 13px 15px;
+  border: 1.5px solid #ddd5e0;
+  border-radius: 12px;
+  background: #ffffff;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.94rem;
+  color: #34283a;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.form-group input::placeholder {
+  color: #aaa2ad;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #18a7aa;
+  box-shadow: 0 0 0 4px rgba(24, 167, 170, 0.13);
+}
+
+.save-address-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: fit-content;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.84rem;
+  color: #6f6674;
+}
+
+.save-address-option input {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  accent-color: #18a7aa;
+}
+
+.continue-payment-button {
+  width: 100%;
+  min-height: 56px;
+  margin-top: 5px;
+  border: 0;
+  border-radius: 999px;
+  background: #18a7aa;
+  box-shadow: 0 12px 25px rgba(24, 167, 170, 0.2);
+  font-family: "Poppins", sans-serif;
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.continue-payment-button:hover {
+  background: #138f93;
+  box-shadow: 0 15px 28px rgba(24, 167, 170, 0.26);
+  transform: translateY(-2px);
+}
+
+.checkout-summary-card {
+  position: sticky;
+  top: 165px;
+  padding: 32px;
+}
+
+.summary-placeholder {
+  margin: 25px 0;
+  padding: 24px 18px;
+  border: 1px dashed #d8d0dc;
+  border-radius: 14px;
+  text-align: center;
+  background: #fffafd;
+}
+
+.summary-placeholder p {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.84rem;
+  color: #817887;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
+  color: #6f6674;
+}
+
+.summary-row strong {
+  color: #4b285f;
+}
+
+.summary-divider {
+  height: 1px;
+  margin: 14px 0 10px;
+  background: #e9e2ec;
+}
+
+.summary-total {
+  align-items: center;
+  padding: 16px 0 12px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #4b285f;
+}
+
+.summary-total strong {
+  font-size: 1.75rem;
+  line-height: 1;
+  color: #4b285f;
+}
+
+.secure-checkout-note {
+  margin: 20px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid #eee8f0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #817887;
+}
+
+.checkout-summary-items {
+  display: grid;
+  gap: 20px;
+  margin: 26px 0;
+}
+
+.checkout-summary-item {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.checkout-summary-image-wrap {
+  width: 72px;
+  height: 72px;
+}
+
+.checkout-summary-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  padding: 5px;
+  border: 1px solid #eee5f0;
+  border-radius: 12px;
+  background: #fffafd;
+}
+
+.checkout-summary-quantity {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 23px;
+  height: 23px;
+  padding: 0 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  background: #4b285f;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.checkout-summary-details {
+  min-width: 0;
+}
+
+.checkout-summary-details h3 {
+  margin: 0 0 5px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.35;
+  color: #4b285f;
+}
+
+.checkout-summary-details p {
+  margin: 0 0 3px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.76rem;
+  color: #817887;
+}
+
+.checkout-summary-details small {
+  font-family: "Poppins", sans-serif;
+  font-size: 0.72rem;
+  color: #9a929e;
+}
+
+.summary-option-divider {
+  color: #b8afb9;
+}
+
+.checkout-summary-item-total {
+  align-self: center;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.84rem;
+  color: #4b285f;
+  white-space: nowrap;
+}
+
+.payment-card {
+  padding: 42px;
+  background: #ffffff;
+  border: 1px solid rgba(75, 40, 95, 0.08);
+  border-radius: 24px;
+  box-shadow: 0 18px 45px rgba(75, 40, 95, 0.1);
+}
+
+.payment-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+
+.payment-card h2 {
+  margin: 0;
+  font-family: "Unica One", sans-serif;
+  font-size: clamp(1.8rem, 3vw, 2.35rem);
+  font-weight: 400;
+  letter-spacing: 1.5px;
+  color: #4b285f;
+}
+
+.secure-payment-label {
+  margin: 5px 0 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #817887;
+  white-space: nowrap;
+}
+
+.payment-methods {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 30px;
+}
+
+.payment-method {
+  width: 100%;
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1.5px solid #ddd5e0;
+  border-radius: 14px;
+  background: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.payment-method.active {
+  border-color: #18a7aa;
+  background: rgba(24, 167, 170, 0.05);
+  box-shadow: 0 0 0 4px rgba(24, 167, 170, 0.09);
+}
+
+.payment-method:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.payment-method-radio {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+  border: 2px solid #c8bfcc;
+  border-radius: 50%;
+  background: #ffffff;
+}
+
+.payment-method.active .payment-method-radio {
+  border: 5px solid #18a7aa;
+}
+
+.payment-method strong,
+.payment-method small {
+  display: block;
+  font-family: "Poppins", sans-serif;
+}
+
+.payment-method strong {
+  margin-bottom: 3px;
+  font-size: 0.9rem;
+  color: #4b285f;
+}
+
+.payment-method small {
+  font-size: 0.75rem;
+  color: #817887;
+}
+
+.payment-form {
+  display: grid;
+  gap: 21px;
+}
+
+.card-number-field {
+  position: relative;
+}
+
+.card-number-field input {
+  padding-right: 52px;
+}
+
+.card-field-icon {
+  position: absolute;
+  top: 50%;
+  right: 17px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.billing-address-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  width: fit-content;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.84rem;
+  color: #6f6674;
+}
+
+.billing-address-option input {
+  width: 17px;
+  height: 17px;
+  margin-top: 2px;
+  accent-color: #18a7aa;
+}
+
+.payment-security-box {
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  border: 1px solid rgba(24, 167, 170, 0.2);
+  border-radius: 14px;
+  background: rgba(24, 167, 170, 0.06);
+}
+
+.payment-security-icon {
+  flex-shrink: 0;
+}
+
+.payment-security-box strong {
+  display: block;
+  margin-bottom: 4px;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.82rem;
+  color: #4b285f;
+}
+
+.payment-security-box p {
+  margin: 0;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: #6f6674;
+}
+
+.checkout-action-buttons {
+  margin-top: 5px;
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.checkout-back-button {
+  min-height: 54px;
+  padding: 0 22px;
+  border: 2px solid #4b285f;
+  border-radius: 999px;
+  background: transparent;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #4b285f;
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.checkout-back-button:hover {
+  background: #4b285f;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.checkout-step.completed {
+  color: #18a7aa;
+}
+
+.checkout-step.completed .checkout-step-number {
+  border-color: #18a7aa;
+  background: #18a7aa;
+  color: #ffffff;
+}
+
+.checkout-progress-line.completed {
+  background: #18a7aa;
+}
+
+.checkout-payment-trust {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #eee8f0;
+}
+
+.checkout-payment-trust .secure-checkout-note {
+  margin: 0 0 14px;
+  padding: 0;
+  border-top: 0;
+  text-align: center;
+}
+
+.checkout-payment-icons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.checkout-payment-icons span {
+  min-width: 45px;
+  min-height: 28px;
+  padding: 5px 8px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid #ded6e1;
+  border-radius: 6px;
+  background: #ffffff;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #5f5266;
+}
+
+
+
 @media (max-width: 650px) {
   .checkout-main {
     width: min(90%, 1200px);
@@ -57,4 +692,98 @@
   .checkout-placeholder {
     padding: 28px 22px;
   }
+
+  .checkout-progress {
+    align-items: flex-start;
+    margin-bottom: 42px;
+  }
+
+.checkout-step {
+    min-width: auto;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
+  }
+
+.checkout-step-number {
+    width: 38px;
+    height: 38px;
+  }
+
+.checkout-step-label {
+    font-size: 0.95rem;
+  }
+
+.checkout-step small {
+    display: none;
+  }
+
+.checkout-progress-line {
+    width: 28px;
+    margin: 18px 5px 0;
+  }
+
+  .checkout-content {
+  grid-template-columns: 1fr;
+}
+
+.shipping-card {
+  padding: 28px 22px;
+}
+
+.shipping-card-heading {
+  flex-direction: column;
+  margin-bottom: 28px;
+}
+
+.form-row.two-columns,
+.location-row {
+  grid-template-columns: 1fr;
+}
+
+.checkout-summary-card {
+  position: static;
+  padding: 26px 22px;
+}
+}
+
+
+@media (min-width: 651px) and (max-width: 980px) {
+  .checkout-content {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary-card {
+    position: static;
+  }
+
+  .checkout-summary-item {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+.checkout-summary-item-total {
+    grid-column: 2;
+  }
+
+  .payment-card {
+  padding: 28px 22px;
+}
+
+.payment-card-heading {
+  flex-direction: column;
+  margin-bottom: 26px;
+}
+
+.checkout-action-buttons {
+  grid-template-columns: 1fr;
+}
+
+.checkout-back-button {
+  order: 2;
+}
+
+.checkout-action-buttons .continue-payment-button {
+  order: 1;
+}
 }

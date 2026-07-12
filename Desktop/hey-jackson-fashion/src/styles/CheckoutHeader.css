@@ -24,8 +24,8 @@
 
 .checkout-logo img {
   display: block;
-  width: 110px;
-  height: 110px;
+  width: 92px;
+  height: 92px;
   object-fit: contain;
 }
 
@@ -49,6 +49,17 @@
   color: #6f6674;
 }
 
+.checkout-summary-card {
+  position: sticky;
+  top: 165px;
+  padding: 32px;
+}
+
+
+/* ===========================
+   Mobile Styles
+=========================== */
+
 @media (max-width: 650px) {
   .checkout-header-container {
     padding: 14px 5%;
@@ -56,8 +67,8 @@
   }
 
   .checkout-logo img {
-    width: 82px;
-    height: 82px;
+    width: 72px;
+    height: 72px;
   }
 
   .checkout-title h1 {
@@ -68,3 +79,4 @@
     display: none;
   }
 }
+

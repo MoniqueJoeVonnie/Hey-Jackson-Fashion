@@ -93,17 +93,12 @@ const recommendedProducts = products
                       to={`/products/${item.productId}`}
                       className="cart-image-link"
                     >
-                      <Link
-                        to={`/products/${item.productId}`}
-                        className="cart-image-link"
-                        >
-                        <div className="cart-item-image">
-                            <img
-                            src={item.image}
-                            alt={item.name}
-                            />
-                        </div>
-                        </Link>      
+                      <div className="cart-item-image">
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                        />
+                      </div>
                     </Link>
 
                     <div className="cart-item-details">
@@ -293,12 +288,9 @@ const recommendedProducts = products
               <strong>${total.toFixed(2)}</strong>
             </div>
 
-            <button
-              type="button"
-              className="checkout-btn"
-            >
+            <Link to="/checkout" className="checkout-btn">
               Checkout
-            </button>
+            </Link>
 
             <p className="secure-checkout-note">
               <span aria-hidden="true">🔒</span>
@@ -377,7 +369,7 @@ const recommendedProducts = products
       </>
       )}
     </main>
-  );
+   );
 }
 
 export default Cart;
