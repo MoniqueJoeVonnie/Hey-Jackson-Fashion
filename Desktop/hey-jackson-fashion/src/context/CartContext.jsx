@@ -175,15 +175,17 @@ export function CartProvider({ children }) {
     });
   }
 
-  function clearCart() {
-    setCartItems([]);
+  function clearCart({ showNotification = true } = {}) {
+  setCartItems([]);
 
+  if (showNotification) {
     showToast({
       title: "Cart Cleared",
       message: "All items were removed from your cart.",
       type: "remove",
     });
   }
+}
 
   const cartCount = cartItems.reduce(
     (total, item) => total + item.quantity,

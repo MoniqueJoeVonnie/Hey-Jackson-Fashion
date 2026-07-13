@@ -770,6 +770,225 @@
 
 
 
+/* ===================================
+   Completed Order Receipt
+=================================== */
+
+.confirmation-intro {
+  margin-bottom: 28px;
+}
+
+.confirmation-order-meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 32px 0;
+}
+
+.confirmation-order-meta > div {
+  padding: 18px;
+  border: 1px solid #eadfea;
+  border-radius: 16px;
+  background: #fffafd;
+  text-align: left;
+}
+
+.confirmation-order-meta span {
+  display: block;
+  margin-bottom: 6px;
+  color: #83798a;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.confirmation-order-meta strong {
+  color: #4b285f;
+  font-size: 0.95rem;
+  overflow-wrap: anywhere;
+}
+
+.confirmation-receipt {
+  margin-top: 28px;
+  text-align: left;
+}
+
+.confirmation-section {
+  padding: 26px 0;
+  border-top: 1px solid #eadfea;
+}
+
+.confirmation-section h3 {
+  margin: 0 0 18px;
+  color: #4b285f;
+  font-family: "Poppins", sans-serif;
+}
+
+.confirmation-section p {
+  margin: 6px 0;
+  color: #706878;
+}
+
+.confirmation-item {
+  display: grid;
+  grid-template-columns: 82px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.confirmation-item img {
+  width: 82px;
+  height: 82px;
+  border: 1px solid #eadfea;
+  border-radius: 14px;
+  object-fit: cover;
+}
+
+.confirmation-item-details {
+  min-width: 0;
+}
+
+.confirmation-item-details strong {
+  color: #4b285f;
+}
+
+.confirmation-item-details p,
+.confirmation-item-details small {
+  margin: 5px 0;
+  color: #83798a;
+}
+
+.confirmation-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+
+.confirmation-totals {
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 1px solid #eadfea;
+}
+
+.confirmation-totals > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 9px 0;
+  color: #706878;
+}
+
+.confirmation-totals .confirmation-total-row {
+  margin-top: 10px;
+  padding-top: 20px;
+  border-top: 1px solid #eadfea;
+  color: #4b285f;
+  font-size: 1.35rem;
+}
+
+.confirmation-demo-notice {
+  margin-top: 28px !important;
+  font-size: 0.85rem;
+}
+
+.confirmation-actions {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.65fr) minmax(240px, 1fr);
+  gap: 16px;
+  max-width: 620px;
+  margin: 30px auto 0;
+}
+
+.confirmation-actions .checkout-back-button,
+.confirmation-actions .continue-payment-button {
+  width: 100%;
+  margin: 0;
+}
+
+@media (max-width: 750px) {
+  .confirmation-order-meta,
+  .confirmation-details-grid,
+  .confirmation-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .confirmation-item {
+    grid-template-columns: 70px minmax(0, 1fr);
+  }
+
+  .confirmation-item img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .confirmation-item > strong {
+    grid-column: 2;
+  }
+}
+
+@media print {
+  .checkout-header,
+  .checkout-footer,
+  .return-to-cart-link,
+  .checkout-progress,
+  .confirmation-actions {
+    display: none !important;
+  }
+
+  .checkout-main {
+    padding: 0;
+  }
+
+  .order-confirmation-card {
+    max-width: none;
+    border: none;
+    box-shadow: none;
+  }
+}
+
+
+
+@media (min-width: 651px) and (max-width: 980px) {
+  .checkout-content {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary-card {
+    position: static;
+  }
+
+  .checkout-summary-item {
+    grid-template-columns: 58px minmax(0, 1fr);
+  }
+
+.checkout-summary-item-total {
+    grid-column: 2;
+  }
+
+  .payment-card {
+  padding: 28px 22px;
+}
+
+.payment-card-heading {
+  flex-direction: column;
+  margin-bottom: 26px;
+}
+
+.checkout-action-buttons {
+  grid-template-columns: 1fr;
+}
+
+.checkout-back-button {
+  order: 2;
+}
+
+.checkout-action-buttons .continue-payment-button {
+  order: 1;
+}
+}
+
+
+
 @media (max-width: 650px) {
   .checkout-main {
     width: min(90%, 1200px);
@@ -867,41 +1086,8 @@
 }
 
 
-@media (min-width: 651px) and (max-width: 980px) {
-  .checkout-content {
-    grid-template-columns: 1fr;
-  }
 
-  .checkout-summary-card {
-    position: static;
-  }
 
-  .checkout-summary-item {
-    grid-template-columns: 58px minmax(0, 1fr);
-  }
-
-.checkout-summary-item-total {
-    grid-column: 2;
-  }
-
-  .payment-card {
-  padding: 28px 22px;
-}
-
-.payment-card-heading {
-  flex-direction: column;
-  margin-bottom: 26px;
-}
-
-.checkout-action-buttons {
-  grid-template-columns: 1fr;
-}
-
-.checkout-back-button {
-  order: 2;
-}
-
-.checkout-action-buttons .continue-payment-button {
-  order: 1;
-}
-}
+/* ===================================
+   Completed Order Receipt
+=================================== */

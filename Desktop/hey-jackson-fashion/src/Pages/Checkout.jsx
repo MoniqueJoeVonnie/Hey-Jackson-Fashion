@@ -6,10 +6,15 @@ import { useCart } from "../context/CartContext";
 import "../styles/Checkout.css";
 
 function Checkout() {
-  const { cartItems, cartCount } = useCart();
+  const {
+    cartItems,
+    cartCount,
+    clearCart,
+  } = useCart();
 
   const [checkoutStep, setCheckoutStep] = useState(1);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [completedOrder, setCompletedOrder] = useState(null);
   const [shippingInfo, setShippingInfo] = useState({
     firstName: "",
     lastName: "",
@@ -218,10 +223,113 @@ const handlePaymentChange = (event) => {
   }));
 };
 
+
+  const generateOrderNumber = () => {
+    const year = new Date().getFullYear();
+
+    const randomCode = Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase();
+
+    return `HJ-${year}-${randomCode}`;
+  };
+
+  const formatOrderDate = (date) =>
+    new Intl.DateTimeFormat("en-US", {
+      dateStyle: "long",
+      timeStyle: "short",
+    }).format(date);
+
+  const getEstimatedDelivery = () => {
+    const startDate = new Date();
+    const endDate = new Date();
+
+    startDate.setDate(startDate.getDate() + 5);
+    endDate.setDate(endDate.getDate() + 8);
+
+    const formatter = new Intl.DateTimeFormat("en-US", {
+      month: "long",
+      day: "numeric",
+    });
+
+    return `${formatter.format(startDate)} – ${formatter.format(
+      endDate
+    )}`;
+  };
+
   const handlePlaceOrder = (event) => {
     event.preventDefault();
 
+    const submittedAt = new Date();
+
+    const order = {
+      id: generateOrderNumber(),
+      submittedAt: submittedAt.toISOString(),
+      formattedDate: formatOrderDate(submittedAt),
+      estimatedDelivery: getEstimatedDelivery(),
+
+      items: cartItems.map((item) => ({
+        id: item.id,
+        productId: item.productId,
+        name: item.name,
+        image: item.image,
+        color: item.color,
+        size: item.size,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+
+      shippingAddress: {
+        firstName: shippingInfo.firstName,
+        lastName: shippingInfo.lastName,
+        address: shippingInfo.address,
+        apartment: shippingInfo.apartment,
+        city: shippingInfo.city,
+        state: shippingInfo.state,
+        zipCode: shippingInfo.zipCode,
+        email: shippingInfo.email,
+        phone: shippingInfo.phone,
+      },
+
+      payment: {
+        method: "Credit or Debit Card",
+        lastFour: paymentInfo.cardNumber
+          .replace(/\D/g, "")
+          .slice(-4),
+        billingMatchesShipping:
+          paymentInfo.billingMatchesShipping,
+      },
+
+      subtotal,
+      shipping,
+      estimatedTax,
+      total,
+      itemCount: cartCount,
+      status: "Order Submitted",
+    };
+
+    setCompletedOrder(order);
+
+    const savedOrders = JSON.parse(
+      localStorage.getItem("heyJacksonOrders") || "[]"
+    );
+
+    localStorage.setItem(
+      "heyJacksonOrders",
+      JSON.stringify([order, ...savedOrders])
+    );
+
+    localStorage.setItem(
+      "heyJacksonLatestOrder",
+      JSON.stringify(order)
+    );
+
     setOrderSubmitted(true);
+
+    clearCart({
+      showNotification: false,
+    });
 
     window.scrollTo({
       top: 0,
@@ -316,11 +424,16 @@ const handlePaymentChange = (event) => {
           </div>
         </div>
 
-        <h1>
-          {checkoutStep === 1 && "Checkout"}
-          {checkoutStep === 2 && "Payment"}
-          {checkoutStep === 3 && "Review Order"}
-        </h1>
+       <h1>
+        {checkoutStep === 1 && "Checkout"}
+        {checkoutStep === 2 && "Payment"}
+        {checkoutStep === 3 &&
+          !orderSubmitted &&
+          "Review Order"}
+        {checkoutStep === 3 &&
+          orderSubmitted &&
+          "Order Confirmation"}
+      </h1>
 
         <div className="checkout-content">
           {checkoutStep === 1 && (
@@ -1064,40 +1177,253 @@ const handlePaymentChange = (event) => {
               </section>
             )}
 
-            {checkoutStep === 3 && orderSubmitted && (
-              <section className="order-confirmation-card">
-                <div
-                  className="order-confirmation-icon"
-                  aria-hidden="true"
-                >
-                  ✓
-                </div>
+            {checkoutStep === 3 &&
+              orderSubmitted &&
+              completedOrder && (
+                <section className="order-confirmation-card">
+                  <div
+                    className="order-confirmation-icon"
+                    aria-hidden="true"
+                  >
+                    ✓
+                  </div>
 
-                <p className="checkout-eyebrow">
-                  Order Submitted
-                </p>
+                  <p className="checkout-eyebrow">
+                    Order Submitted
+                  </p>
 
-                <h2>Thank You for Your Order!</h2>
+                  <h2>Thank You for Your Order!</h2>
 
-                <p>
-                  Your checkout demonstration was completed
-                  successfully.
-                </p>
+                  <p className="confirmation-intro">
+                    Your checkout demonstration was completed
+                    successfully.
+                  </p>
 
-                <p>
-                  A real order confirmation will appear here after
-                  the website is connected to a payment processor
-                  and order-management system.
-                </p>
+                  <div className="confirmation-order-meta">
+                    <div>
+                      <span>Order Number</span>
+                      <strong>{completedOrder.id}</strong>
+                    </div>
 
-                <Link
-                  to="/products"
-                  className="continue-payment-button"
-                >
-                  Continue Shopping
-                </Link>
-              </section>
-            )}
+                    <div>
+                      <span>Order Date</span>
+                      <strong>
+                        {completedOrder.formattedDate}
+                      </strong>
+                    </div>
+
+                    <div>
+                      <span>Estimated Delivery</span>
+                      <strong>
+                        {completedOrder.estimatedDelivery}
+                      </strong>
+                    </div>
+                  </div>
+
+                  <div className="confirmation-receipt">
+                    <div className="confirmation-section">
+                      <h3>Items Ordered</h3>
+
+                      {completedOrder.items.map((item) => {
+                        const numericPrice = Number(
+                          String(item.price).replace(
+                            /[^0-9.]/g,
+                            ""
+                          )
+                        );
+
+                        const lineTotal =
+                          numericPrice * item.quantity;
+
+                        return (
+                          <div
+                            className="confirmation-item"
+                            key={item.id}
+                          >
+                            <img
+                              src={item.image}
+                              alt={item.name}
+                            />
+
+                            <div className="confirmation-item-details">
+                              <strong>{item.name}</strong>
+
+                              {(item.color || item.size) && (
+                                <p>
+                                  {item.color}
+
+                                  {item.color &&
+                                    item.size &&
+                                    " • "}
+
+                                  {item.size}
+                                </p>
+                              )}
+
+                              <small>
+                                Quantity: {item.quantity}
+                              </small>
+                            </div>
+
+                            <strong>
+                              {formatCurrency(lineTotal)}
+                            </strong>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    <div className="confirmation-details-grid">
+                      <div className="confirmation-section">
+                        <h3>Shipping Address</h3>
+
+                        <p>
+                          {
+                            completedOrder.shippingAddress
+                              .firstName
+                          }{" "}
+                          {
+                            completedOrder.shippingAddress
+                              .lastName
+                          }
+                        </p>
+
+                        <p>
+                          {
+                            completedOrder.shippingAddress
+                              .address
+                          }
+                        </p>
+
+                        {completedOrder.shippingAddress
+                          .apartment && (
+                          <p>
+                            {
+                              completedOrder.shippingAddress
+                                .apartment
+                            }
+                          </p>
+                        )}
+
+                        <p>
+                          {
+                            completedOrder.shippingAddress
+                              .city
+                          }
+                          ,{" "}
+                          {
+                            completedOrder.shippingAddress
+                              .state
+                          }{" "}
+                          {
+                            completedOrder.shippingAddress
+                              .zipCode
+                          }
+                        </p>
+
+                        <p>
+                          {
+                            completedOrder.shippingAddress
+                              .email
+                          }
+                        </p>
+
+                        {completedOrder.shippingAddress
+                          .phone && (
+                          <p>
+                            {
+                              completedOrder.shippingAddress
+                                .phone
+                            }
+                          </p>
+                        )}
+                      </div>
+
+                      <div className="confirmation-section">
+                        <h3>Payment Method</h3>
+
+                        <p>
+                          {
+                            completedOrder.payment
+                              .method
+                          }
+                        </p>
+
+                        <p>
+                          Card ending in{" "}
+                          {
+                            completedOrder.payment
+                              .lastFour
+                          }
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="confirmation-totals">
+                      <div>
+                        <span>Subtotal</span>
+                        <span>
+                          {formatCurrency(
+                            completedOrder.subtotal
+                          )}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span>Shipping</span>
+                        <span>
+                          {completedOrder.shipping === 0
+                            ? "Free"
+                            : formatCurrency(
+                                completedOrder.shipping
+                              )}
+                        </span>
+                      </div>
+
+                      <div>
+                        <span>Estimated Tax</span>
+                        <span>
+                          {formatCurrency(
+                            completedOrder.estimatedTax
+                          )}
+                        </span>
+                      </div>
+
+                      <div className="confirmation-total-row">
+                        <strong>Total</strong>
+
+                        <strong>
+                          {formatCurrency(
+                            completedOrder.total
+                          )}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="confirmation-demo-notice">
+                    This is a demonstration receipt. No real
+                    payment was processed.
+                  </p>
+
+                  <div className="confirmation-actions">
+                    <button
+                      type="button"
+                      className="checkout-back-button"
+                      onClick={() => window.print()}
+                    >
+                      Print Receipt
+                    </button>
+
+                    <Link
+                      to="/products"
+                      className="continue-payment-button"
+                    >
+                      Continue Shopping
+                    </Link>
+                  </div>
+                </section>
+              )}
 
             {!orderSubmitted && (
               <aside className="checkout-summary-card">
