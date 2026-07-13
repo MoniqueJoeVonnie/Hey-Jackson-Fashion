@@ -56,6 +56,137 @@
 }
 
 
+/* ===================================
+   Review and Confirmation
+=================================== */
+
+.review-card,
+.order-confirmation-card {
+  width: 100%;
+  padding: 46px;
+  border: 1px solid #eadfea;
+  border-radius: 28px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(75, 40, 95, 0.08);
+}
+
+.review-card-heading,
+.review-section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.review-card-heading {
+  margin-bottom: 32px;
+}
+
+.review-card h2,
+.order-confirmation-card h2 {
+  margin: 5px 0 0;
+  color: #4b285f;
+  font-family: "Unica One", sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  letter-spacing: 2px;
+}
+
+.review-section {
+  padding: 26px 0;
+  border-top: 1px solid #eadfea;
+}
+
+.review-section h3 {
+  margin: 0 0 14px;
+  color: #4b285f;
+  font-family: "Poppins", sans-serif;
+}
+
+.review-section p {
+  margin: 6px 0;
+  color: #706878;
+  font-family: "Poppins", sans-serif;
+}
+
+.review-edit-button {
+  padding: 7px 14px;
+  border: 1px solid #5b18a8;
+  border-radius: 999px;
+  background: transparent;
+  color: #5b18a8;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.review-notice {
+  margin: 20px 0 28px;
+  padding: 20px;
+  border: 1px solid rgba(24, 167, 170, 0.25);
+  border-radius: 16px;
+  background: rgba(24, 167, 170, 0.06);
+  color: #4b285f;
+}
+
+.review-notice p {
+  margin: 7px 0 0;
+  color: #706878;
+}
+
+.demo-checkout-warning {
+  margin: 20px 0 0;
+  color: #83798a;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.order-confirmation-card {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.order-confirmation-icon {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #18a7aa;
+  color: #ffffff;
+  font-size: 2.4rem;
+  font-weight: 800;
+}
+
+.order-confirmation-card p {
+  max-width: 620px;
+  margin: 14px auto;
+  color: #706878;
+  line-height: 1.7;
+}
+
+.order-confirmation-card .continue-payment-button {
+  max-width: 340px;
+  margin: 30px auto 0;
+  text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .review-card,
+  .order-confirmation-card {
+    padding: 28px 20px;
+  }
+
+  .review-card-heading,
+  .review-section-heading {
+    align-items: flex-start;
+  }
+}
+
+
+
 /* ===========================
    Mobile Styles
 =========================== */

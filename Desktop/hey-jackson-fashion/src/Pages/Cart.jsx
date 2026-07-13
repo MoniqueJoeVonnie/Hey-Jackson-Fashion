@@ -94,10 +94,12 @@ const recommendedProducts = products
                       className="cart-image-link"
                     >
                       <div className="cart-item-image">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                        />
+                        {item.image && (
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                          />
+                        )}
                       </div>
                     </Link>
 
@@ -289,32 +291,30 @@ const recommendedProducts = products
             </div>
 
             <Link to="/checkout" className="checkout-btn">
-              Checkout
-            </Link>
+                Continue to Checkout
+              </Link>
 
-            <p className="secure-checkout-note">
-              <span aria-hidden="true">🔒</span>
-              Secure and encrypted checkout
-            </p>
+              <p className="secure-checkout-note">
+                <span aria-hidden="true">🔒</span>
+                Secure and encrypted checkout
+              </p>
 
-            <div
-              className="payment-methods"
-              aria-label="Accepted payment methods"
-            >
-              <span className="payment-method">Visa</span>
-              <span className="payment-method">
-                Mastercard
-              </span>
-              <span className="payment-method">Amex</span>
-              <span className="payment-method">PayPal</span>
-            </div>
+              <div
+                className="payment-methods"
+                aria-label="Accepted payment methods"
+              >
+                <span className="payment-method">Visa</span>
+                <span className="payment-method">Mastercard</span>
+                <span className="payment-method">Amex</span>
+                <span className="payment-method">PayPal</span>
+              </div>
 
-            <Link
-              to="/products"
-              className="continue-shopping-link"
-            >
-              Shop New Arrivals
-            </Link>
+              <Link
+                to="/products"
+                className="continue-shopping-link"
+              >
+                Shop New Arrivals
+              </Link>
                     </aside>
         </div>
 

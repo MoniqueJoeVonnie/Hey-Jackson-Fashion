@@ -5,13 +5,23 @@
 }
 
 .cart-page {
+  font-family: "Poppins", sans-serif;
   min-height: 100vh;
-  padding: 70px 7% 90px;
+  padding: 170px 7% 90px;
   background: linear-gradient(
     180deg,
     #fff8fc 0%,
     #fdf2f8 100%
   );
+}
+
+.cart-page > h1,
+.cart-summary > h2,
+.cart-recommendations-heading h2,
+.cart-item-details h2 {
+  font-family: "Unica One", sans-serif;
+  color: #4b285f;
+  letter-spacing: 1.5px;
 }
 
 .cart-page > h1 {
@@ -29,6 +39,10 @@
   gap: 34px;
   max-width: 1380px;
   margin: 0 auto;
+}
+
+.cart-items-column {
+  align-self: start;
 }
 
 /* =========================
@@ -341,6 +355,9 @@
   position: sticky;
   top: 155px;
   padding: 38px;
+  align-self: start;
+  height: fit-content;
+  margin-top: 0;
   background: #ffffff;
   border: 1px solid rgba(75, 40, 95, 0.08);
   border-radius: 30px;
@@ -358,6 +375,7 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  font-family: "Poppins", sans-serif;
   gap: 24px;
   margin: 18px 0;
   color: #312638;
@@ -396,43 +414,58 @@
 }
 
 .checkout-btn {
+  width: 100%;
+  min-height: 58px;
+  margin: 28px 0 22px;
+  padding: 16px 24px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  text-decoration: none;
-  width: 100%;
-  margin-top: 8px;
-  padding: 15px 22px;
+
   border: none;
   border-radius: 999px;
   background: #18a7aa;
   color: #ffffff;
-  font-size: 1rem;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 1.08rem;
   font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 10px 20px rgba(24, 167, 170, 0.22);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+
+  box-shadow: 0 10px 24px rgba(24, 167, 170, 0.2);
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+    transform 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .checkout-btn:hover {
+  background: #4b285f;
+  color: #ffffff;
   transform: translateY(-2px);
-  background: #138e91;
-  box-shadow: 0 13px 24px rgba(24, 167, 170, 0.3);
+  box-shadow: 0 14px 28px rgba(75, 40, 95, 0.22);
 }
 
 .secure-checkout-note {
+  margin: 0;
+  padding: 20px 0 16px;
+  border-top: 1px solid #eadfea;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  margin: 11px 0 0;
-  color: #6c6072;
-  font-size: 0.8rem;
+  gap: 8px;
+
+  color: #6f6675;
+  font-family: "Poppins", sans-serif;
+  font-size: 0.9rem;
   font-weight: 600;
+  text-align: center;
 }
+
 
 @media (prefers-reduced-motion: reduce) {
   .cart-page > h1,
@@ -459,53 +492,57 @@
 ========================= */
 
 .payment-methods {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 7px;
-  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  width: 100%;
+  margin: 0 0 24px;
 }
 
 .payment-method {
-  display: inline-flex;
+  min-width: 0;
+  height: 46px;
+  padding: 8px 5px;
+
+  display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 28px;
-  padding: 5px 9px;
-  border: 1px solid rgba(75, 40, 95, 0.14);
-  border-radius: 7px;
+
+  border: 1px solid #dfd2e3;
+  border-radius: 12px;
   background: #ffffff;
   color: #4b285f;
-  font-size: 0.68rem;
+
+  font-family: "Poppins", sans-serif;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
-  box-shadow: 0 3px 8px rgba(75, 40, 95, 0.06);
+  text-align: center;
 }
 
 .continue-shopping-link {
-  display: block;
   width: 100%;
-  margin-top: 18px;
+  min-height: 52px;
   padding: 13px 20px;
-  border: 2px solid #5b1793;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid #5b18a8;
   border-radius: 999px;
-  background: transparent;
-  color: #5b1793;
-  text-align: center;
+  color: #5b18a8;
+  background: #ffffff;
+
+  font-family: "Poppins", sans-serif;
   font-size: 1rem;
   font-weight: 800;
+  text-align: center;
   text-decoration: none;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
 }
 
 .continue-shopping-link:hover {
-  transform: translateY(-2px);
-  background: #5b1793;
+  background: #5b18a8;
   color: #ffffff;
-  text-decoration: none;
 }
 
 .cart-items-column {
@@ -833,6 +870,95 @@
   animation-delay: 0.16s;
 }
 
+/* ===================================
+   Final Cart Width and Alignment Fix
+=================================== */
+
+.cart-page {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.cart-page *,
+.cart-page *::before,
+.cart-page *::after {
+  box-sizing: border-box;
+}
+
+.cart-layout {
+  width: min(1400px, 100%);
+  max-width: 1400px;
+  margin: 0 auto;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(340px, 420px);
+  gap: 42px;
+  align-items: start;
+}
+
+.cart-items-column {
+  width: 100%;
+  min-width: 0;
+}
+
+.cart-items {
+  width: 100%;
+  min-width: 0;
+}
+
+.cart-item {
+  width: 100%;
+  max-width: 100%;
+}
+
+.cart-summary {
+  width: 100%;
+  max-width: 420px;
+  min-width: 0;
+  margin: 0;
+  align-self: start;
+}
+
+.clear-cart-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: fit-content;
+  max-width: 100%;
+  margin: 28px 0 0;
+}
+
+.payment-methods {
+  width: 100%;
+  max-width: 100%;
+
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.payment-method {
+  width: 100%;
+  min-width: 0;
+  padding: 10px 5px;
+  white-space: nowrap;
+}
+
+
+
+/* =========================
+     max-width: 1100px
+========================= */
+
+@media (max-width: 1100px) {
+  .payment-methods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 
 
 /* =========================
@@ -846,6 +972,15 @@
   .cart-summary {
     position: static;
   }
+
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .cart-summary {
+    width: 100%;
+    max-width: none;
+  }
 }
 
 
@@ -853,7 +988,7 @@
 
 
 /* =========================
-   TABLET
+   TABLET 720px
 ========================= */
 @media (max-width: 720px) {
   .cart-page {
@@ -931,9 +1066,25 @@
 
 
 
+/* =========================
+     max-width: 600px
+========================= */
+
+@media (max-width: 600px) {
+  .cart-page {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .payment-methods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+
 
 /* =========================
-   MOBILE
+   MOBILE 520px
 ========================= */
 
 @media (max-width: 520px) {

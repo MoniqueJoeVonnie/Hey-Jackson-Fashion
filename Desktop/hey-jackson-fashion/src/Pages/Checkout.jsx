@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import CheckoutHeader from "../components/CheckoutHeader";
 import CheckoutFooter from "../components/CheckoutFooter";
 import { useCart } from "../context/CartContext";
@@ -8,6 +9,225 @@ function Checkout() {
   const { cartItems, cartCount } = useCart();
 
   const [checkoutStep, setCheckoutStep] = useState(1);
+  const [orderSubmitted, setOrderSubmitted] = useState(false);
+  const [shippingInfo, setShippingInfo] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    apartment: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    saveAddress: false,
+  });
+
+  const [paymentInfo, setPaymentInfo] = useState({
+    cardName: "",
+    cardNumber: "",
+    expiration: "",
+    securityCode: "",
+    billingMatchesShipping: true,
+  });
+
+  const [shippingErrors, setShippingErrors] = useState({});
+  const [shippingTouched, setShippingTouched] = useState({});
+
+  const formatPhoneNumber = (value) => {
+  const numbers = value.replace(/\D/g, "").slice(0, 10);
+
+    if (numbers.length <= 3) {
+      return numbers;
+    }
+
+    if (numbers.length <= 6) {
+      return `(${numbers.slice(0, 3)}) ${numbers.slice(3)}`;
+    }
+
+    return `(${numbers.slice(0, 3)}) ${numbers.slice(
+      3,
+      6
+    )}-${numbers.slice(6)}`;
+  };
+
+  const validateShippingInfo = (values) => {
+    const errors = {};
+
+    if (!values.firstName.trim()) {
+      errors.firstName = "Please enter your first name.";
+    }
+
+    if (!values.lastName.trim()) {
+      errors.lastName = "Please enter your last name.";
+    }
+
+    if (!values.email.trim()) {
+      errors.email = "Please enter your email address.";
+    } else if (
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)
+    ) {
+      errors.email = "Please enter a valid email address.";
+    }
+
+    const phoneDigits = values.phone.replace(/\D/g, "");
+
+    if (values.phone && phoneDigits.length !== 10) {
+      errors.phone = "Please enter a 10-digit phone number.";
+    }
+
+    if (!values.address.trim()) {
+      errors.address = "Please enter your street address.";
+    }
+
+    if (!values.city.trim()) {
+      errors.city = "Please enter your city.";
+    }
+
+    if (!values.state) {
+      errors.state = "Please select your state.";
+    }
+
+    if (!values.zipCode.trim()) {
+      errors.zipCode = "Please enter your ZIP code.";
+    } else if (!/^\d{5}$/.test(values.zipCode)) {
+      errors.zipCode = "ZIP code must contain 5 digits.";
+    }
+
+    return errors;
+  };
+
+  const handleShippingChange = (event) => {
+    const { name, value, type, checked } = event.target;
+
+    let updatedValue = type === "checkbox" ? checked : value;
+
+    if (name === "phone") {
+      updatedValue = formatPhoneNumber(value);
+    }
+
+    if (name === "zipCode") {
+      updatedValue = value.replace(/\D/g, "").slice(0, 5);
+    }
+
+    const updatedShippingInfo = {
+      ...shippingInfo,
+      [name]: updatedValue,
+    };
+
+    setShippingInfo(updatedShippingInfo);
+
+    if (shippingTouched[name]) {
+      const updatedErrors =
+        validateShippingInfo(updatedShippingInfo);
+
+      setShippingErrors(updatedErrors);
+    }
+  };
+
+  const handleShippingBlur = (event) => {
+    const { name } = event.target;
+
+    setShippingTouched((currentTouched) => ({
+      ...currentTouched,
+      [name]: true,
+    }));
+
+    setShippingErrors(validateShippingInfo(shippingInfo));
+  };
+
+  const handleShippingSubmit = (event) => {
+  event.preventDefault();
+
+  const errors = validateShippingInfo(shippingInfo);
+
+  setShippingErrors(errors);
+
+  setShippingTouched({
+    firstName: true,
+    lastName: true,
+    email: true,
+    phone: true,
+    address: true,
+    apartment: true,
+    city: true,
+    state: true,
+    zipCode: true,
+  });
+
+  if (Object.keys(errors).length > 0) {
+    const firstErrorField = Object.keys(errors)[0];
+
+    document.getElementById(firstErrorField)?.focus();
+
+    return;
+  }
+
+  if (shippingInfo.saveAddress) {
+    localStorage.setItem(
+      "heyJacksonShippingInfo",
+      JSON.stringify(shippingInfo)
+    );
+  }
+
+  setCheckoutStep(2);
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth",
+  });
+};
+
+const handlePaymentChange = (event) => {
+  const { name, value, type, checked } = event.target;
+
+  let updatedValue =
+    type === "checkbox" ? checked : value;
+
+  if (name === "cardNumber") {
+    const numbers = value
+      .replace(/\D/g, "")
+      .slice(0, 16);
+
+    updatedValue = numbers.replace(
+      /(\d{4})(?=\d)/g,
+      "$1 "
+    );
+  }
+
+  if (name === "expiration") {
+    const numbers = value
+      .replace(/\D/g, "")
+      .slice(0, 4);
+
+    updatedValue =
+      numbers.length > 2
+        ? `${numbers.slice(0, 2)} / ${numbers.slice(2)}`
+        : numbers;
+  }
+
+  if (name === "securityCode") {
+    updatedValue = value
+      .replace(/\D/g, "")
+      .slice(0, 4);
+  }
+
+  setPaymentInfo((currentPaymentInfo) => ({
+    ...currentPaymentInfo,
+    [name]: updatedValue,
+  }));
+};
+
+  const handlePlaceOrder = (event) => {
+    event.preventDefault();
+
+    setOrderSubmitted(true);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const subtotal = cartItems.reduce((total, item) => {
     const numericPrice = Number(
@@ -34,6 +254,11 @@ function Checkout() {
       <CheckoutHeader />
 
       <main className="checkout-main">
+        <Link to="/cart" className="return-to-cart-link">
+          <span aria-hidden="true">←</span>
+          Return to Cart
+        </Link>
+
         <div className="checkout-progress">
           <div
             className={`checkout-step ${
@@ -113,14 +338,8 @@ function Checkout() {
 
             <form
               className="shipping-form"
-              onSubmit={(event) => {
-                event.preventDefault();
-                setCheckoutStep(2);
-                window.scrollTo({
-                  top: 0,
-                  behavior: "smooth",
-                });
-              }}
+              onSubmit={handleShippingSubmit}
+              noValidate
             >
               <div className="form-row two-columns">
                 <div className="form-group">
@@ -134,8 +353,38 @@ function Checkout() {
                     type="text"
                     autoComplete="given-name"
                     placeholder="First name"
-                    required
+                    value={shippingInfo.firstName}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.firstName &&
+                      shippingErrors.firstName
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={
+                      Boolean(
+                        shippingTouched.firstName &&
+                          shippingErrors.firstName
+                      )
+                    }
+                    aria-describedby={
+                      shippingErrors.firstName
+                        ? "firstName-error"
+                        : undefined
+                    }
                   />
+
+                  {shippingTouched.firstName &&
+                    shippingErrors.firstName && (
+                      <p
+                        id="firstName-error"
+                        className="form-error-message"
+                        role="alert"
+                      >
+                        {shippingErrors.firstName}
+                      </p>
+                    )}
                 </div>
 
                 <div className="form-group">
@@ -149,39 +398,109 @@ function Checkout() {
                     type="text"
                     autoComplete="family-name"
                     placeholder="Last name"
-                    required
+                    value={shippingInfo.lastName}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.lastName &&
+                      shippingErrors.lastName
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={
+                      Boolean(
+                        shippingTouched.lastName &&
+                          shippingErrors.lastName
+                      )
+                    }
+                    aria-describedby={
+                      shippingErrors.lastName
+                        ? "lastName-error"
+                        : undefined
+                    }
                   />
+
+                  {shippingTouched.lastName &&
+                    shippingErrors.lastName && (
+                      <p
+                        id="lastName-error"
+                        className="form-error-message"
+                        role="alert"
+                      >
+                        {shippingErrors.lastName}
+                      </p>
+                    )}
                 </div>
               </div>
 
-              <div className="form-row two-columns">
-                <div className="form-group">
-                  <label htmlFor="email">
-                    Email Address <span>*</span>
-                  </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                placeholder="you@example.com"
+                value={shippingInfo.email}
+                onChange={handleShippingChange}
+                onBlur={handleShippingBlur}
+                className={
+                  shippingTouched.email && shippingErrors.email
+                    ? "input-error"
+                    : ""
+                }
+                aria-invalid={
+                  Boolean(
+                    shippingTouched.email && shippingErrors.email
+                  )
+                }
+                aria-describedby={
+                  shippingErrors.email ? "email-error" : undefined
+                }
+              />
 
-                  <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    placeholder="you@example.com"
-                    required
-                  />
-                </div>
+              {shippingTouched.email && shippingErrors.email && (
+                <p
+                  id="email-error"
+                  className="form-error-message"
+                  role="alert"
+                >
+                  {shippingErrors.email}
+                </p>
+              )}
 
-                <div className="form-group">
-                  <label htmlFor="phone">Phone Number</label>
+                <input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  placeholder="(555) 555-5555"
+                  value={shippingInfo.phone}
+                  onChange={handleShippingChange}
+                  onBlur={handleShippingBlur}
+                  className={
+                    shippingTouched.phone && shippingErrors.phone
+                      ? "input-error"
+                      : ""
+                  }
+                  aria-invalid={
+                    Boolean(
+                      shippingTouched.phone && shippingErrors.phone
+                    )
+                  }
+                  aria-describedby={
+                    shippingErrors.phone ? "phone-error" : undefined
+                  }
+                />
 
-                  <input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    autoComplete="tel"
-                    placeholder="(555) 555-5555"
-                  />
-                </div>
-              </div>
+                {shippingTouched.phone && shippingErrors.phone && (
+                  <p
+                    id="phone-error"
+                    className="form-error-message"
+                    role="alert"
+                  >
+                    {shippingErrors.phone}
+                  </p>
+                )}
 
               <div className="form-group">
                 <label htmlFor="address">
@@ -194,14 +513,38 @@ function Checkout() {
                   type="text"
                   autoComplete="street-address"
                   placeholder="123 Main Street"
-                  required
+                  value={shippingInfo.address}
+                  onChange={handleShippingChange}
+                  onBlur={handleShippingBlur}
+                  className={
+                    shippingTouched.address &&
+                    shippingErrors.address
+                      ? "input-error"
+                      : ""
+                  }
+                  aria-invalid={
+                    Boolean(
+                      shippingTouched.address &&
+                        shippingErrors.address
+                    )
+                  }
+                  aria-describedby={
+                    shippingErrors.address
+                      ? "address-error"
+                      : undefined
+                  }
                 />
-              </div>
 
-              <div className="form-group">
-                <label htmlFor="apartment">
-                  Apartment, Suite or Unit
-                </label>
+                {shippingTouched.address &&
+                  shippingErrors.address && (
+                    <p
+                      id="address-error"
+                      className="form-error-message"
+                      role="alert"
+                    >
+                      {shippingErrors.address}
+                    </p>
+                  )}
 
                 <input
                   id="apartment"
@@ -209,6 +552,8 @@ function Checkout() {
                   type="text"
                   autoComplete="address-line2"
                   placeholder="Apartment, suite or unit number"
+                  value={shippingInfo.apartment}
+                  onChange={handleShippingChange}
                 />
               </div>
 
@@ -224,8 +569,33 @@ function Checkout() {
                     type="text"
                     autoComplete="address-level2"
                     placeholder="City"
-                    required
+                    value={shippingInfo.city}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.city && shippingErrors.city
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={
+                      Boolean(
+                        shippingTouched.city && shippingErrors.city
+                      )
+                    }
+                    aria-describedby={
+                      shippingErrors.city ? "city-error" : undefined
+                    }
                   />
+
+                  {shippingTouched.city && shippingErrors.city && (
+                    <p
+                      id="city-error"
+                      className="form-error-message"
+                      role="alert"
+                    >
+                      {shippingErrors.city}
+                    </p>
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -237,12 +607,27 @@ function Checkout() {
                     id="state"
                     name="state"
                     autoComplete="address-level1"
-                    required
-                    defaultValue=""
+                    value={shippingInfo.state}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.state && shippingErrors.state
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={
+                      Boolean(
+                        shippingTouched.state && shippingErrors.state
+                      )
+                    }
+                    aria-describedby={
+                      shippingErrors.state ? "state-error" : undefined
+                    }
                   >
                     <option value="" disabled>
                       Select state
                     </option>
+
                     <option value="CT">Connecticut</option>
                     <option value="MA">Massachusetts</option>
                     <option value="NY">New York</option>
@@ -250,27 +635,67 @@ function Checkout() {
                     <option value="PA">Pennsylvania</option>
                     <option value="RI">Rhode Island</option>
                   </select>
+
+                  {shippingTouched.state && shippingErrors.state && (
+                    <p
+                      id="state-error"
+                      className="form-error-message"
+                      role="alert"
+                    >
+                      {shippingErrors.state}
+                    </p>
+                  )}
                 </div>
 
-                <div className="form-group">
-                  <label htmlFor="zipCode">
-                    ZIP Code <span>*</span>
-                  </label>
+                <input
+                  id="zipCode"
+                  name="zipCode"
+                  type="text"
+                  inputMode="numeric"
+                  autoComplete="postal-code"
+                  placeholder="06103"
+                  maxLength={5}
+                  value={shippingInfo.zipCode}
+                  onChange={handleShippingChange}
+                  onBlur={handleShippingBlur}
+                  className={
+                    shippingTouched.zipCode &&
+                    shippingErrors.zipCode
+                      ? "input-error"
+                      : ""
+                  }
+                  aria-invalid={
+                    Boolean(
+                      shippingTouched.zipCode &&
+                        shippingErrors.zipCode
+                    )
+                  }
+                  aria-describedby={
+                    shippingErrors.zipCode
+                      ? "zipCode-error"
+                      : undefined
+                  }
+                />
 
-                  <input
-                    id="zipCode"
-                    name="zipCode"
-                    type="text"
-                    inputMode="numeric"
-                    autoComplete="postal-code"
-                    placeholder="06103"
-                    required
-                  />
-                </div>
+                {shippingTouched.zipCode &&
+                  shippingErrors.zipCode && (
+                    <p
+                      id="zipCode-error"
+                      className="form-error-message"
+                      role="alert"
+                    >
+                      {shippingErrors.zipCode}
+                    </p>
+                  )}
               </div>
 
               <label className="save-address-option">
-                <input type="checkbox" name="saveAddress" />
+                <input
+                  type="checkbox"
+                  name="saveAddress"
+                  checked={shippingInfo.saveAddress}
+                  onChange={handleShippingChange}
+                />
 
                 <span>
                   Save this address for a faster checkout next time
@@ -278,7 +703,13 @@ function Checkout() {
               </label>
 
               <button type="submit" className="continue-payment-button">
-                Continue to Payment
+                <span>Continue to Payment</span>
+                <span
+                  className="continue-button-arrow"
+                  aria-hidden="true"
+                >
+                  →
+                </span>
               </button>
             </form>
           </section>
@@ -351,6 +782,8 @@ function Checkout() {
                             type="text"
                             autoComplete="cc-name"
                             placeholder="Name as shown on card"
+                            value={paymentInfo.cardName}
+                            onChange={handlePaymentChange}
                             required
                           />
                         </div>
@@ -369,6 +802,8 @@ function Checkout() {
                               autoComplete="cc-number"
                               placeholder="1234 5678 9012 3456"
                               maxLength={19}
+                              value={paymentInfo.cardNumber}
+                              onChange={handlePaymentChange}
                               required
                             />
 
@@ -392,6 +827,8 @@ function Checkout() {
                               autoComplete="cc-exp"
                               placeholder="MM / YY"
                               maxLength={7}
+                              value={paymentInfo.expiration}
+                              onChange={handlePaymentChange}
                               required
                             />
                           </div>
@@ -409,6 +846,8 @@ function Checkout() {
                               autoComplete="cc-csc"
                               placeholder="CVV"
                               maxLength={4}
+                              value={paymentInfo.securityCode}
+                              onChange={handlePaymentChange}
                               required
                             />
                           </div>
@@ -418,7 +857,8 @@ function Checkout() {
                           <input
                             type="checkbox"
                             name="billingMatchesShipping"
-                            defaultChecked
+                            checked={paymentInfo.billingMatchesShipping}
+                            onChange={handlePaymentChange}
                           />
 
                           <span>
@@ -461,18 +901,206 @@ function Checkout() {
                             Back to Shipping
                           </button>
 
-                          <button
+                         <button
                             type="submit"
                             className="continue-payment-button"
                           >
-                            Continue to Review
+                            <span>Continue to Review</span>
+                            <span
+                              className="continue-button-arrow"
+                              aria-hidden="true"
+                            >
+                              →
+                            </span>
                           </button>
                         </div>
                       </form>
                     </section>
                   )}
+            {checkoutStep === 3 && !orderSubmitted && (
+              <section className="review-card">
+                <div className="review-card-heading">
+                  <div>
+                    <p className="checkout-eyebrow">
+                      Step 3 of 3
+                    </p>
 
-            <aside className="checkout-summary-card">
+                    <h2>Review Your Order</h2>
+                  </div>
+
+                  <p className="secure-payment-label">
+                    🔒 Secure checkout
+                  </p>
+                </div>
+
+                <div className="review-section">
+                  <div className="review-section-heading">
+                    <h3>Shipping Information</h3>
+
+                    <button
+                      type="button"
+                      className="review-edit-button"
+                      onClick={() => {
+                        setCheckoutStep(1);
+
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+
+                  <p>
+                    {shippingInfo.firstName}{" "}
+                    {shippingInfo.lastName}
+                  </p>
+
+                  <p>{shippingInfo.address}</p>
+
+                  {shippingInfo.apartment && (
+                    <p>{shippingInfo.apartment}</p>
+                  )}
+
+                  <p>
+                    {shippingInfo.city}, {shippingInfo.state}{" "}
+                    {shippingInfo.zipCode}
+                  </p>
+
+                  <p>{shippingInfo.email}</p>
+
+                  {shippingInfo.phone && (
+                    <p>{shippingInfo.phone}</p>
+                  )}
+                </div>
+
+                <div className="review-section">
+                  <div className="review-section-heading">
+                    <h3>Payment Information</h3>
+
+                    <button
+                      type="button"
+                      className="review-edit-button"
+                      onClick={() => {
+                        setCheckoutStep(2);
+
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
+
+                  <p>
+                    Card ending in{" "}
+                    {paymentInfo.cardNumber
+                      .replace(/\s/g, "")
+                      .slice(-4)}
+                  </p>
+
+                  <p>
+                    Expiration: {paymentInfo.expiration}
+                  </p>
+
+                  <p>
+                    Billing address{" "}
+                    {paymentInfo.billingMatchesShipping
+                      ? "matches shipping address"
+                      : "is different from shipping address"}
+                  </p>
+                </div>
+
+                <div className="review-notice">
+                  <strong>Please review your information.</strong>
+
+                  <p>
+                    By placing your order, you confirm that the
+                    shipping and payment details above are correct.
+                  </p>
+                </div>
+
+                <form onSubmit={handlePlaceOrder}>
+                  <div className="checkout-action-buttons">
+                    <button
+                      type="button"
+                      className="checkout-back-button"
+                      onClick={() => {
+                        setCheckoutStep(2);
+
+                        window.scrollTo({
+                          top: 0,
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      Back to Payment
+                    </button>
+
+                    <button
+                      type="submit"
+                      className="continue-payment-button"
+                    >
+                      <span>Place Order</span>
+
+                      <span
+                        className="continue-button-arrow"
+                        aria-hidden="true"
+                      >
+                        →
+                      </span>
+                    </button>
+                  </div>
+                </form>
+
+                <p className="demo-checkout-warning">
+                  This demonstration does not process or charge a
+                  real payment.
+                </p>
+              </section>
+            )}
+
+            {checkoutStep === 3 && orderSubmitted && (
+              <section className="order-confirmation-card">
+                <div
+                  className="order-confirmation-icon"
+                  aria-hidden="true"
+                >
+                  ✓
+                </div>
+
+                <p className="checkout-eyebrow">
+                  Order Submitted
+                </p>
+
+                <h2>Thank You for Your Order!</h2>
+
+                <p>
+                  Your checkout demonstration was completed
+                  successfully.
+                </p>
+
+                <p>
+                  A real order confirmation will appear here after
+                  the website is connected to a payment processor
+                  and order-management system.
+                </p>
+
+                <Link
+                  to="/products"
+                  className="continue-payment-button"
+                >
+                  Continue Shopping
+                </Link>
+              </section>
+            )}
+
+            {!orderSubmitted && (
+              <aside className="checkout-summary-card">
             {cartItems.length === 0 ? (
               <div className="summary-placeholder">
                 <p>Your cart is currently empty.</p>
@@ -579,7 +1207,9 @@ function Checkout() {
               <span>PayPal</span>
             </div>
           </div>
-                    </aside>
+                  </aside>
+                    )}
+      
         </div>
       </main>
 
