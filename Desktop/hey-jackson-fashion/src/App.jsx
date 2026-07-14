@@ -21,6 +21,7 @@ import CategoryPage from "./Pages/CategoryPage";
 import ProductPage from "./Pages/Product";
 import Cart from "./Pages/Cart";
 import Checkout from "./Pages/Checkout";
+import Orders from "./Pages/Orders";
 
 
 
@@ -288,6 +289,8 @@ useEffect(() => {
             path="/checkout"
             element={<Checkout />}
           />
+
+          <Route path="/orders" element={<Orders />} />
 
       </Routes>
     </>

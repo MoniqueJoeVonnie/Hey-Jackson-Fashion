@@ -15,6 +15,8 @@ function Checkout() {
   const [checkoutStep, setCheckoutStep] = useState(1);
   const [orderSubmitted, setOrderSubmitted] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
+  const [isProcessingOrder, setIsProcessingOrder] = useState(false);
+  
   const [shippingInfo, setShippingInfo] = useState({
     firstName: "",
     lastName: "",
@@ -347,85 +349,9 @@ const handlePaymentChange = (event) => {
     }, 900);
   };
 
-    const submittedAt = new Date();
-
-    const order = {
-      id: generateOrderNumber(),
-      submittedAt: submittedAt.toISOString(),
-      formattedDate: formatOrderDate(submittedAt),
-      estimatedDelivery: getEstimatedDelivery(),
-
-      items: cartItems.map((item) => ({
-        id: item.id,
-        productId: item.productId,
-        name: item.name,
-        image: item.image,
-        color: item.color,
-        size: item.size,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-
-      shippingAddress: {
-        firstName: shippingInfo.firstName,
-        lastName: shippingInfo.lastName,
-        address: shippingInfo.address,
-        apartment: shippingInfo.apartment,
-        city: shippingInfo.city,
-        state: shippingInfo.state,
-        zipCode: shippingInfo.zipCode,
-        email: shippingInfo.email,
-        phone: shippingInfo.phone,
-      },
-
-      payment: {
-        method: "Credit or Debit Card",
-        lastFour: paymentInfo.cardNumber
-          .replace(/\D/g, "")
-          .slice(-4),
-        billingMatchesShipping:
-          paymentInfo.billingMatchesShipping,
-      },
-
-      subtotal,
-      shipping,
-      estimatedTax,
-      total,
-      itemCount: cartCount,
-      status: "Order Submitted",
-    };
-
-    setCompletedOrder(order);
-
-    const savedOrders = JSON.parse(
-      localStorage.getItem("heyJacksonOrders") || "[]"
-    );
-
-    localStorage.setItem(
-      "heyJacksonOrders",
-      JSON.stringify([order, ...savedOrders])
-    );
-
-    localStorage.setItem(
-      "heyJacksonLatestOrder",
-      JSON.stringify(order)
-    );
-
-    setOrderSubmitted(true);
-
-    clearCart({
-      showNotification: false,
-    });
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
   const subtotal = cartItems.reduce((total, item) => {
-    const numericPrice = Number(
-      String(item.price).replace(/[^0-9.]/g, "")
+    const numericPrice = parseFloat(
+      item.price.replace(/[$,]/g, "")
     );
 
     return total + numericPrice * item.quantity;
@@ -443,8 +369,6 @@ const handlePaymentChange = (event) => {
       currency: "USD",
     }).format(amount);
 
-  const [isProcessingOrder, setIsProcessingOrder] =
-  useState(false);
 
   return (
     <div className="checkout-layout">
@@ -1703,6 +1627,6 @@ const handlePaymentChange = (event) => {
       <CheckoutFooter />
     </div>
   );
-
+}
 
 export default Checkout;
