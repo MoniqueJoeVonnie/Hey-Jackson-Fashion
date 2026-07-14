@@ -7,7 +7,96 @@ import "../styles/CheckoutReview.css";
 
 function CheckoutReview() {
   const navigate = useNavigate();
-  const { cartItems } = useCart();
+  const { cartItems, clearCart } = useCart();
+
+  function handlePlaceOrder() {
+    if (cartItems.length === 0) {
+      return;
+    }
+
+    const subtotal = cartItems.reduce((total, item) => {
+      const price =
+        typeof item.price === "number"
+          ? item.price
+          : Number(
+              String(item.price)
+                .replace("$", "")
+                .replace(",", "")
+            );
+
+      return total + price * item.quantity;
+    }, 0);
+
+    const shipping = subtotal >= 50 ? 0 : 6.99;
+    const tax = subtotal * 0.06;
+    const total = subtotal + shipping + tax;
+
+    const today = new Date();
+
+const deliveryStart = new Date(today);
+deliveryStart.setDate(today.getDate() + 5);
+
+const deliveryEnd = new Date(today);
+deliveryEnd.setDate(today.getDate() + 8);
+
+const newOrder = {
+  id: `HJ-${today.getFullYear()}-${Date.now()
+    .toString()
+    .slice(-6)}`,
+
+  submittedAt: today.toISOString(),
+
+  formattedDate: today.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  }),
+
+  estimatedDelivery: `${deliveryStart.toLocaleDateString(
+    "en-US",
+    {
+      month: "long",
+      day: "numeric",
+    }
+  )} – ${deliveryEnd.toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+  })}`,
+
+  status: "Order Submitted",
+
+  items: cartItems,
+
+  subtotal,
+
+  shipping,
+
+  tax,
+
+  total,
+};
+
+    let savedOrders = [];
+
+    try {
+      savedOrders = JSON.parse(
+        localStorage.getItem("heyJacksonOrders") || "[]"
+      );
+    } catch (error) {
+      console.error("Could not read saved orders:", error);
+    }
+
+    const updatedOrders = [newOrder, ...savedOrders];
+
+    localStorage.setItem(
+      "heyJacksonOrders",
+      JSON.stringify(updatedOrders)
+    );
+
+    clearCart();
+
+    navigate("/orders");
+  }
 
   return (
   <div className="checkout-layout">
@@ -17,7 +106,7 @@ function CheckoutReview() {
 
       <button
         className="return-link"
-        onClick={() => navigate("/checkout")}
+        onClick={() => navigate("/checkout/payment")}
       >
         ← Return to Payment
       </button>
@@ -120,6 +209,16 @@ function CheckoutReview() {
           {/* Items Ordered */}
 
           {/* Buttons */}
+
+          <div className="review-actions">
+            <button
+              type="button"
+              className="place-order-button"
+              onClick={handlePlaceOrder}
+            >
+              Place Order
+            </button>
+          </div>
 
         </section>
 

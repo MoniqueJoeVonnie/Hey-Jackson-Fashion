@@ -22,6 +22,7 @@ import ProductPage from "./Pages/Product";
 import Cart from "./Pages/Cart";
 import Checkout from "./Pages/Checkout";
 import Orders from "./Pages/Orders";
+import OrderDetails from "./pages/OrderDetails";
 
 
 
@@ -288,6 +289,16 @@ useEffect(() => {
           <Route
             path="/checkout"
             element={<Checkout />}
+          />
+
+          <Route
+            path="/orders"
+            element={<Orders />}
+          />
+
+          <Route
+            path="/orders/:orderId"
+            element={<OrderDetails />}
           />
 
           <Route path="/orders" element={<Orders />} />
