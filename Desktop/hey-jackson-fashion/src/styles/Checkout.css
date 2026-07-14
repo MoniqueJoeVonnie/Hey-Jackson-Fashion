@@ -1063,6 +1063,102 @@
   .checkout-main {
   padding-top: 90px;
 }
+
+
+/* ===================================
+   Order Confirmation Entrance
+=================================== */
+
+.order-confirmation-card {
+  animation: confirmationCardEnter 0.65s ease-out both;
+}
+
+.order-confirmation-icon {
+  animation:
+    confirmationIconEnter 0.55s
+      cubic-bezier(0.34, 1.56, 0.64, 1)
+      0.18s both;
+}
+
+.order-confirmation-card .checkout-eyebrow,
+.order-confirmation-card h2,
+.order-confirmation-card .confirmation-intro {
+  animation: confirmationContentEnter 0.55s ease-out both;
+}
+
+.order-confirmation-card .checkout-eyebrow {
+  animation-delay: 0.28s;
+}
+
+.order-confirmation-card h2 {
+  animation-delay: 0.36s;
+}
+
+.order-confirmation-card .confirmation-intro {
+  animation-delay: 0.44s;
+}
+
+.confirmation-order-meta {
+  animation: confirmationContentEnter 0.55s ease-out 0.52s both;
+}
+
+.confirmation-receipt {
+  animation: confirmationContentEnter 0.55s ease-out 0.6s both;
+}
+
+.confirmation-actions {
+  animation: confirmationContentEnter 0.55s ease-out 0.68s both;
+}
+
+@keyframes confirmationCardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes confirmationIconEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.45) rotate(-8deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotate(0);
+  }
+}
+
+@keyframes confirmationContentEnter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .order-confirmation-card,
+  .order-confirmation-icon,
+  .order-confirmation-card .checkout-eyebrow,
+  .order-confirmation-card h2,
+  .order-confirmation-card .confirmation-intro,
+  .confirmation-order-meta,
+  .confirmation-receipt,
+  .confirmation-actions {
+    animation: none;
+  }
+}
+
 }
 
 
