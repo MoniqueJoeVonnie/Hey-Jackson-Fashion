@@ -13,10 +13,10 @@ function CheckoutHeader() {
           />
         </Link>
 
-        <div className="checkout-title">
-          <h1>Secure Checkout</h1>
-          <p>Your information is protected with secure encryption.</p>
-        </div>
+        <h1 className="checkout-title">
+          Checkout
+        </h1>
+        <p>Your information is protected with secure encryption.</p>
       </div>
     </header>
   );

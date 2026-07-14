@@ -946,7 +946,142 @@
   }
 }
 
+  .review-items-section {
+  margin-top: 38px;
+  padding-top: 34px;
+  border-top: 1px solid #ece3ee;
+}
 
+.review-items-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.review-order-item {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 22px 0;
+  border-bottom: 1px solid #ece3ee;
+}
+
+.review-order-item:last-child {
+  border-bottom: none;
+}
+
+.review-order-item-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  background: #fffafc;
+  border: 1px solid #e8dce8;
+  border-radius: 16px;
+}
+
+.review-order-item-details h4 {
+  margin: 0 0 8px;
+  color: #4b285f;
+  font-size: 1.05rem;
+}
+
+.review-order-item-details p,
+.review-order-item-details small {
+  display: block;
+  margin: 4px 0;
+  color: #766d7b;
+}
+
+.review-order-item-price {
+  color: #4b285f;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .review-order-item {
+    grid-template-columns: 78px minmax(0, 1fr);
+    gap: 15px;
+  }
+
+  .review-order-item-image {
+    width: 78px;
+    height: 78px;
+  }
+
+  .review-order-item-price {
+    grid-column: 2;
+  }
+
+.review-card .review-order-item {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: center;
+  padding: 22px 0;
+  overflow: hidden;
+}
+
+.review-card .review-order-item-image {
+  display: block;
+  width: 100px !important;
+  height: 100px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+  object-fit: contain !important;
+  background: #fffafc;
+  border: 1px solid #e8dce8;
+  border-radius: 16px;
+}
+
+.review-card .review-order-item-details {
+  min-width: 0;
+}
+
+.review-card .review-order-item-price {
+  align-self: center;
+  white-space: nowrap;
+}
+}
+
+@media (max-width: 640px) {
+  .review-card .review-order-item {
+    grid-template-columns: 78px minmax(0, 1fr);
+  }
+
+  .review-card .review-order-item-image {
+    width: 78px !important;
+    height: 78px !important;
+    max-width: 78px !important;
+    max-height: 78px !important;
+  }
+
+  .review-card .review-order-item-price {
+    grid-column: 2;
+  }
+
+  .checkout-main {
+  padding-top: 90px;
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ===================================
+   max-width: min-width: 651px and max-width: 980px
+=================================== */
 
 @media (min-width: 651px) and (max-width: 980px) {
   .checkout-content {
@@ -987,6 +1122,13 @@
 }
 }
 
+
+
+
+
+/* ===================================
+   max-width: 650px
+=================================== */
 
 
 @media (max-width: 650px) {
@@ -1087,7 +1229,3 @@
 
 
 
-
-/* ===================================
-   Completed Order Receipt
-=================================== */

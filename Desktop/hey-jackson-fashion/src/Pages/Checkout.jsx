@@ -261,6 +261,92 @@ const handlePaymentChange = (event) => {
   const handlePlaceOrder = (event) => {
     event.preventDefault();
 
+    if (isProcessingOrder) {
+      return;
+    }
+
+    setIsProcessingOrder(true);
+
+    setTimeout(() => {
+      const submittedAt = new Date();
+
+      const order = {
+        id: generateOrderNumber(),
+        submittedAt: submittedAt.toISOString(),
+        formattedDate: formatOrderDate(submittedAt),
+        estimatedDelivery: getEstimatedDelivery(),
+
+        items: cartItems.map((item) => ({
+          id: item.id,
+          productId: item.productId,
+          name: item.name,
+          image: item.image,
+          color: item.color,
+          size: item.size,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+
+        shippingAddress: {
+          firstName: shippingInfo.firstName,
+          lastName: shippingInfo.lastName,
+          address: shippingInfo.address,
+          apartment: shippingInfo.apartment,
+          city: shippingInfo.city,
+          state: shippingInfo.state,
+          zipCode: shippingInfo.zipCode,
+          email: shippingInfo.email,
+          phone: shippingInfo.phone,
+        },
+
+        payment: {
+          method: "Credit or Debit Card",
+          lastFour: paymentInfo.cardNumber
+            .replace(/\D/g, "")
+            .slice(-4),
+          billingMatchesShipping:
+            paymentInfo.billingMatchesShipping,
+        },
+
+        subtotal,
+        shipping,
+        estimatedTax,
+        total,
+        itemCount: cartCount,
+        status: "Order Submitted",
+      };
+
+      setCompletedOrder(order);
+
+      const savedOrders = JSON.parse(
+        localStorage.getItem("heyJacksonOrders") || "[]"
+      );
+
+      localStorage.setItem(
+        "heyJacksonOrders",
+        JSON.stringify([order, ...savedOrders])
+      );
+
+      localStorage.setItem(
+        "heyJacksonLatestOrder",
+        JSON.stringify(order)
+      );
+
+      setOrderSubmitted(true);
+
+      clearCart({
+        showNotification: false,
+      });
+
+      setIsProcessingOrder(false);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    }, 900);
+  };
+
     const submittedAt = new Date();
 
     const order = {
@@ -356,6 +442,9 @@ const handlePaymentChange = (event) => {
       style: "currency",
       currency: "USD",
     }).format(amount);
+
+  const [isProcessingOrder, setIsProcessingOrder] =
+  useState(false);
 
   return (
     <div className="checkout-layout">
@@ -1128,6 +1217,71 @@ const handlePaymentChange = (event) => {
                   </p>
                 </div>
 
+                <div className="review-section review-items-section">
+                  <div className="review-section-heading">
+                    <h3>Items Ordered</h3>
+
+                    <button
+                      type="button"
+                      className="review-edit-button"
+                      onClick={() => {
+                        window.location.href = "/cart";
+                      }}
+                    >
+                      Edit Cart
+                    </button>
+                  </div>
+
+                  <div className="review-items-list">
+                    {cartItems.map((item) => {
+                      const numericPrice = Number(
+                        String(item.price).replace(/[^0-9.]/g, "")
+                      );
+
+                      const itemTotal =
+                        numericPrice * item.quantity;
+
+                      return (
+                        <article
+                          className="review-order-item"
+                          key={item.id}
+                        >
+                          <img
+                            src={item.image}
+                            alt={item.name}
+                            className="review-order-item-image"
+                          />
+
+                          <div className="review-order-item-details">
+                            <h4>{item.name}</h4>
+
+                            {(item.color || item.size) && (
+                              <p>
+                                {item.color}
+
+                                {item.color &&
+                                  item.size &&
+                                  " • "}
+
+                                {item.size &&
+                                  `Size ${item.size}`}
+                              </p>
+                            )}
+
+                            <small>
+                              Quantity: {item.quantity}
+                            </small>
+                          </div>
+
+                          <strong className="review-order-item-price">
+                            {formatCurrency(itemTotal)}
+                          </strong>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div className="review-notice">
                   <strong>Please review your information.</strong>
 
@@ -1157,15 +1311,22 @@ const handlePaymentChange = (event) => {
                     <button
                       type="submit"
                       className="continue-payment-button"
+                      disabled={isProcessingOrder}
                     >
-                      <span>Place Order</span>
-
-                      <span
-                        className="continue-button-arrow"
-                        aria-hidden="true"
-                      >
-                        →
+                      <span>
+                        {isProcessingOrder
+                          ? "Processing Order..."
+                          : "Place Order"}
                       </span>
+
+                      {!isProcessingOrder && (
+                        <span
+                          className="continue-button-arrow"
+                          aria-hidden="true"
+                        >
+                          →
+                        </span>
+                      )}
                     </button>
                   </div>
                 </form>
@@ -1542,6 +1703,6 @@ const handlePaymentChange = (event) => {
       <CheckoutFooter />
     </div>
   );
-}
+
 
 export default Checkout;
