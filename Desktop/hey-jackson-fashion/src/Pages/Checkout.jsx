@@ -302,10 +302,16 @@ const handlePaymentChange = (event) => {
         },
 
         payment: {
-          method: "Credit or Debit Card",
+          method: paymentInfo.cardNumber
+            .replace(/\D/g, "")
+            .startsWith("4")
+              ? "Visa"
+              : "Credit or Debit Card",
+
           lastFour: paymentInfo.cardNumber
             .replace(/\D/g, "")
             .slice(-4),
+
           billingMatchesShipping:
             paymentInfo.billingMatchesShipping,
         },
@@ -448,7 +454,15 @@ const handlePaymentChange = (event) => {
           "Order Confirmation"}
       </h1>
 
-        <div className="checkout-content">
+        <div
+          className={`checkout-content ${
+            checkoutStep === 3 &&
+            orderSubmitted &&
+            completedOrder
+              ? "confirmation-mode"
+              : ""
+          }`}
+        >
           {checkoutStep === 1 && (
             <section className="shipping-card">
             <div className="shipping-card-heading">
@@ -889,6 +903,44 @@ const handlePaymentChange = (event) => {
                         className="payment-form"
                         onSubmit={(event) => {
                           event.preventDefault();
+
+
+                          const cleanCardNumber = paymentInfo.cardNumber.replace(
+                            /\D/g,
+                            ""
+                          );
+
+                          const getCardType = (cardNumber) => {
+                            if (/^4/.test(cardNumber)) {
+                              return "Visa";
+                            }
+
+                            if (
+                              /^(5[1-5]|2[2-7])/.test(cardNumber)
+                            ) {
+                              return "Mastercard";
+                            }
+
+                            if (/^3[47]/.test(cardNumber)) {
+                              return "American Express";
+                            }
+
+                            if (/^(6011|65|64[4-9])/.test(cardNumber)) {
+                              return "Discover";
+                            }
+
+                            return "Credit or Debit Card";
+                          };
+
+                          const paymentSummary = {
+                            cardType: getCardType(cleanCardNumber),
+                            lastFour: cleanCardNumber.slice(-4),
+                          };
+
+                          localStorage.setItem(
+                            "heyJacksonPayment",
+                            JSON.stringify(paymentSummary)
+                          );
                           setCheckoutStep(3);
 
                           window.scrollTo({
@@ -1125,7 +1177,7 @@ const handlePaymentChange = (event) => {
                   <p>
                     Card ending in{" "}
                     {paymentInfo.cardNumber
-                      .replace(/\s/g, "")
+                      .replace(/\D/g, "")
                       .slice(-4)}
                   </p>
 

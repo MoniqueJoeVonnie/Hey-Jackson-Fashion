@@ -33,48 +33,73 @@ function CheckoutReview() {
 
     const today = new Date();
 
-const deliveryStart = new Date(today);
-deliveryStart.setDate(today.getDate() + 5);
+    const deliveryStart = new Date(today);
+    deliveryStart.setDate(today.getDate() + 5);
 
-const deliveryEnd = new Date(today);
-deliveryEnd.setDate(today.getDate() + 8);
+    const deliveryEnd = new Date(today);
+    deliveryEnd.setDate(today.getDate() + 8);
 
-const newOrder = {
-  id: `HJ-${today.getFullYear()}-${Date.now()
-    .toString()
-    .slice(-6)}`,
+    const savedPayment = JSON.parse(
+      localStorage.getItem("heyJacksonPayment") || "{}"
+    );
 
-  submittedAt: today.toISOString(),
+    const paymentMethod = {
+      cardType: savedPayment.cardType || "Credit Card",
+      lastFour:
+        savedPayment.lastFour ||
+        savedPayment.cardNumber?.replace(/\D/g, "").slice(-4) ||
+        "",
+    };
 
-  formattedDate: today.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  }),
 
-  estimatedDelivery: `${deliveryStart.toLocaleDateString(
-    "en-US",
-    {
-      month: "long",
-      day: "numeric",
+    let paymentMethod = null;
+
+    try {
+      paymentMethod = JSON.parse(
+        localStorage.getItem("heyJacksonPayment") || "null"
+      );
+    } catch (error) {
+      console.error(
+        "Unable to load payment summary:",
+        error
+      );
     }
-  )} – ${deliveryEnd.toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-  })}`,
 
-  status: "Order Submitted",
+    const newOrder = {
+      id: `HJ-${today.getFullYear()}-${Date.now()
+        .toString()
+        .slice(-6)}`,
 
-  items: cartItems,
+      submittedAt: today.toISOString(),
 
-  subtotal,
+      formattedDate: today.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+        year: "numeric",
+      }),
 
-  shipping,
+      estimatedDelivery: `${deliveryStart.toLocaleDateString(
+        "en-US",
+        {
+          month: "long",
+          day: "numeric",
+        }
+      )} – ${deliveryEnd.toLocaleDateString("en-US", {
+        month: "long",
+        day: "numeric",
+      })}`,
 
-  tax,
+      status: "Order Submitted",
 
-  total,
-};
+      items: cartItems,
+
+      shippingAddress,
+      paymentMethod,
+      subtotal,
+      shipping,
+      tax,
+      total,
+    };
 
     let savedOrders = [];
 

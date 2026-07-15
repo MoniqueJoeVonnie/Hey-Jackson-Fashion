@@ -59,9 +59,7 @@
 /* ===================================
    Review and Confirmation
 =================================== */
-
-.review-card,
-.order-confirmation-card {
+.review-card {
   width: 100%;
   padding: 46px;
   border: 1px solid #eadfea;
@@ -137,12 +135,6 @@
   margin: 20px 0 0;
   color: #83798a;
   font-size: 0.85rem;
-  text-align: center;
-}
-
-.order-confirmation-card {
-  max-width: 800px;
-  margin: 0 auto;
   text-align: center;
 }
 
