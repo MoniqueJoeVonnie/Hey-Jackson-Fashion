@@ -4,6 +4,11 @@ import CheckoutHeader from "../components/CheckoutHeader";
 import CheckoutFooter from "../components/CheckoutFooter";
 import { useCart } from "../context/CartContext";
 import "../styles/Checkout.css";
+import visaLogo from "../assets/payment/visa.svg";
+import mastercardLogo from "../assets/payment/mastercard.svg";
+import amexLogo from "../assets/payment/amex.svg";
+import discoverLogo from "../assets/payment/discover.svg";
+import paypalLogo from "../assets/payment/paypal.svg";
 
 function Checkout() {
   const {
@@ -184,6 +189,37 @@ function Checkout() {
     behavior: "smooth",
   });
 };
+
+const getCardType = (cardNumber) => {
+  const numbers = cardNumber.replace(/\D/g, "");
+
+  if (/^4/.test(numbers)) {
+    return "Visa";
+  }
+
+  if (/^(5[1-5]|2[2-7])/.test(numbers)) {
+    return "Mastercard";
+  }
+
+  if (/^3[47]/.test(numbers)) {
+    return "American Express";
+  }
+
+  if (/^(6011|65|64[4-9])/.test(numbers)) {
+    return "Discover";
+  }
+
+  return "";
+};
+
+const cardLogos = {
+  Visa: visaLogo,
+  Mastercard: mastercardLogo,
+  "American Express": amexLogo,
+  Discover: discoverLogo,
+};
+
+const detectedCardType = getCardType(paymentInfo.cardNumber);
 
 const handlePaymentChange = (event) => {
   const { name, value, type, checked } = event.target;
@@ -573,74 +609,82 @@ const handlePaymentChange = (event) => {
                 </div>
               </div>
 
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="you@example.com"
-                value={shippingInfo.email}
-                onChange={handleShippingChange}
-                onBlur={handleShippingBlur}
-                className={
-                  shippingTouched.email && shippingErrors.email
-                    ? "input-error"
-                    : ""
-                }
-                aria-invalid={
-                  Boolean(
-                    shippingTouched.email && shippingErrors.email
-                  )
-                }
-                aria-describedby={
-                  shippingErrors.email ? "email-error" : undefined
-                }
-              />
-
-              {shippingTouched.email && shippingErrors.email && (
-                <p
-                  id="email-error"
-                  className="form-error-message"
-                  role="alert"
-                >
-                  {shippingErrors.email}
-                </p>
-              )}
+              <div className="form-group">
+                <label htmlFor="email">
+                  Email Address <span>*</span>
+                </label>
 
                 <input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  inputMode="tel"
-                  autoComplete="tel"
-                  placeholder="(555) 555-5555"
-                  value={shippingInfo.phone}
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="you@example.com"
+                  value={shippingInfo.email}
                   onChange={handleShippingChange}
                   onBlur={handleShippingBlur}
                   className={
-                    shippingTouched.phone && shippingErrors.phone
+                    shippingTouched.email && shippingErrors.email
                       ? "input-error"
                       : ""
                   }
-                  aria-invalid={
-                    Boolean(
-                      shippingTouched.phone && shippingErrors.phone
-                    )
-                  }
+                  aria-invalid={Boolean(
+                    shippingTouched.email && shippingErrors.email
+                  )}
                   aria-describedby={
-                    shippingErrors.phone ? "phone-error" : undefined
+                    shippingErrors.email ? "email-error" : undefined
                   }
                 />
 
-                {shippingTouched.phone && shippingErrors.phone && (
+                {shippingTouched.email && shippingErrors.email && (
                   <p
-                    id="phone-error"
+                    id="email-error"
                     className="form-error-message"
                     role="alert"
                   >
-                    {shippingErrors.phone}
+                    {shippingErrors.email}
                   </p>
                 )}
+              </div>
+
+                <div className="form-group">
+                  <label htmlFor="phone">
+                    Phone Number
+                  </label>
+
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="(555) 555-5555"
+                    value={shippingInfo.phone}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.phone && shippingErrors.phone
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={Boolean(
+                      shippingTouched.phone && shippingErrors.phone
+                    )}
+                    aria-describedby={
+                      shippingErrors.phone ? "phone-error" : undefined
+                    }
+                  />
+
+                  {shippingTouched.phone && shippingErrors.phone && (
+                    <p
+                      id="phone-error"
+                      className="form-error-message"
+                      role="alert"
+                    >
+                      {shippingErrors.phone}
+                    </p>
+                  )}
+                </div>
 
               <div className="form-group">
                 <label htmlFor="address">
@@ -828,46 +872,48 @@ const handlePaymentChange = (event) => {
                   )}
                 </div>
 
-                <input
-                  id="zipCode"
-                  name="zipCode"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="postal-code"
-                  placeholder="06103"
-                  maxLength={5}
-                  value={shippingInfo.zipCode}
-                  onChange={handleShippingChange}
-                  onBlur={handleShippingBlur}
-                  className={
-                    shippingTouched.zipCode &&
-                    shippingErrors.zipCode
-                      ? "input-error"
-                      : ""
-                  }
-                  aria-invalid={
-                    Boolean(
-                      shippingTouched.zipCode &&
-                        shippingErrors.zipCode
-                    )
-                  }
-                  aria-describedby={
-                    shippingErrors.zipCode
-                      ? "zipCode-error"
-                      : undefined
-                  }
-                />
+                <div className="form-group">
+                  <label htmlFor="zipCode">
+                    ZIP Code <span>*</span>
+                  </label>
 
-                {shippingTouched.zipCode &&
-                  shippingErrors.zipCode && (
-                    <p
-                      id="zipCode-error"
-                      className="form-error-message"
-                      role="alert"
-                    >
-                      {shippingErrors.zipCode}
-                    </p>
-                  )}
+                  <input
+                    id="zipCode"
+                    name="zipCode"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="postal-code"
+                    placeholder="06103"
+                    maxLength={5}
+                    value={shippingInfo.zipCode}
+                    onChange={handleShippingChange}
+                    onBlur={handleShippingBlur}
+                    className={
+                      shippingTouched.zipCode && shippingErrors.zipCode
+                        ? "input-error"
+                        : ""
+                    }
+                    aria-invalid={Boolean(
+                      shippingTouched.zipCode && shippingErrors.zipCode
+                    )}
+                    aria-describedby={
+                      shippingErrors.zipCode
+                        ? "zipCode-error"
+                        : undefined
+                    }
+                  />
+
+                  {shippingTouched.zipCode &&
+                    shippingErrors.zipCode && (
+                      <p
+                        id="zipCode-error"
+                        className="form-error-message"
+                        role="alert"
+                      >
+                        {shippingErrors.zipCode}
+                      </p>
+                    )}
+                </div>
               </div>
 
               <label className="save-address-option">
@@ -1026,11 +1072,28 @@ const handlePaymentChange = (event) => {
                               required
                             />
 
-                            <span className="card-field-icon">
-                              💳
+                            <span
+                              className={`card-field-icon ${
+                                detectedCardType ? "card-type-detected" : ""
+                              }`}
+                              
+                              aria-live="polite"
+                            >
+
+                              {detectedCardType ? (
+                                <img
+                                  src={cardLogos[detectedCardType]}
+                                  alt={detectedCardType}
+                                  className="card-brand-logo"
+                                />
+                              ) : (
+                                "Card"
+                              )}
                             </span>
                           </div>
                         </div>
+
+          
 
                         <div className="form-row two-columns">
                           <div className="form-group">
