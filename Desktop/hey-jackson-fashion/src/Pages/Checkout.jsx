@@ -46,6 +46,9 @@ function Checkout() {
   const [shippingErrors, setShippingErrors] = useState({});
   const [shippingTouched, setShippingTouched] = useState({});
 
+  const [paymentErrors, setPaymentErrors] = useState({});
+  const [paymentTouched, setPaymentTouched] = useState({});
+
   const formatPhoneNumber = (value) => {
   const numbers = value.replace(/\D/g, "").slice(0, 10);
 
@@ -226,6 +229,73 @@ const detectedCardType = getCardType(
 const securityCodeLength =
   detectedCardType === "American Express" ? 4 : 3;
 
+const validatePaymentInfo = (values) => {
+  const errors = {};
+
+  const cleanCardNumber = values.cardNumber.replace(/\D/g, "");
+  const currentCardType = getCardType(values.cardNumber);
+
+  if (!values.cardName.trim()) {
+    errors.cardName = "Please enter the name shown on the card.";
+  }
+
+  if (!cleanCardNumber) {
+    errors.cardNumber = "Please enter your card number.";
+  } else if (!currentCardType) {
+    errors.cardNumber = "Please enter a supported card number.";
+  } else {
+    const expectedLength =
+      currentCardType === "American Express" ? 15 : 16;
+
+    if (cleanCardNumber.length !== expectedLength) {
+      errors.cardNumber =
+        currentCardType === "American Express"
+          ? "American Express card numbers must contain 15 digits."
+          : `${currentCardType} card numbers must contain 16 digits.`;
+    }
+  }
+
+  const expirationNumbers = values.expiration.replace(/\D/g, "");
+
+  if (!expirationNumbers) {
+    errors.expiration = "Please enter the expiration date.";
+  } else if (expirationNumbers.length !== 4) {
+    errors.expiration = "Enter the expiration date as MM / YY.";
+  } else {
+    const month = Number(expirationNumbers.slice(0, 2));
+    const year = Number(`20${expirationNumbers.slice(2)}`);
+
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    if (month < 1 || month > 12) {
+      errors.expiration = "Please enter a valid expiration month.";
+    } else if (
+      year < currentYear ||
+      (year === currentYear && month < currentMonth)
+    ) {
+      errors.expiration = "This card appears to be expired.";
+    }
+  }
+
+  const expectedSecurityCodeLength =
+    currentCardType === "American Express" ? 4 : 3;
+
+  if (!values.securityCode) {
+    errors.securityCode = "Please enter the security code.";
+  } else if (
+    values.securityCode.length !== expectedSecurityCodeLength
+  ) {
+    errors.securityCode =
+      currentCardType === "American Express"
+        ? "American Express security codes contain 4 digits."
+        : "The security code must contain 3 digits.";
+  }
+
+  return errors;
+};  
+
 const handlePaymentChange = (event) => {
   const { name, value, type, checked } = event.target;
 
@@ -272,6 +342,16 @@ const handlePaymentChange = (event) => {
   }));
 };
 
+const handlePaymentBlur = (event) => {
+  const { name } = event.target;
+
+  setPaymentTouched((currentTouched) => ({
+    ...currentTouched,
+    [name]: true,
+  }));
+
+  setPaymentErrors(validatePaymentInfo(paymentInfo));
+};
 
   const generateOrderNumber = () => {
     const year = new Date().getFullYear();
@@ -1002,11 +1082,32 @@ const handlePaymentChange = (event) => {
                         onSubmit={(event) => {
                           event.preventDefault();
 
+                          const errors = validatePaymentInfo(paymentInfo);
+
+                            setPaymentErrors(errors);
+
+                            setPaymentTouched({
+                              cardName: true,
+                              cardNumber: true,
+                              expiration: true,
+                              securityCode: true,
+                            });
+
+                            if (Object.keys(errors).length > 0) {
+                              const firstErrorField = Object.keys(errors)[0];
+
+                              document.getElementById(firstErrorField)?.focus();
+
+                              return;
+                            }
+
 
                           const cleanCardNumber = paymentInfo.cardNumber.replace(
                             /\D/g,
                             ""
                           );
+
+                          
 
                           const getCardType = (cardNumber) => {
                             if (/^4/.test(cardNumber)) {
@@ -1060,8 +1161,30 @@ const handlePaymentChange = (event) => {
                             placeholder="Name as shown on card"
                             value={paymentInfo.cardName}
                             onChange={handlePaymentChange}
+                            onBlur={handlePaymentBlur}
+                            className={
+                              paymentTouched.cardName && paymentErrors.cardName
+                                ? "input-error"
+                                : ""
+                            }
+                            aria-invalid={Boolean(
+                              paymentTouched.cardName && paymentErrors.cardName
+                            )}
+                            aria-describedby={
+                              paymentErrors.cardName ? "cardName-error" : undefined
+                            }
                             required
                           />
+                            {paymentTouched.cardName &&
+                              paymentErrors.cardName && (
+                                <p
+                                  id="cardName-error"
+                                  className="form-error-message"
+                                  role="alert"
+                                >
+                                  {paymentErrors.cardName}
+                                </p>
+                            )}
                         </div>
 
                         <div className="form-group">
@@ -1080,9 +1203,36 @@ const handlePaymentChange = (event) => {
                               maxLength={19}
                               value={paymentInfo.cardNumber}
                               onChange={handlePaymentChange}
+                              onBlur={handlePaymentBlur}
+                              className={
+                                paymentTouched.cardNumber &&
+                                paymentErrors.cardNumber
+                                  ? "input-error"
+                                  : ""
+                              }
+
+                              aria-invalid={Boolean(
+                                paymentTouched.cardNumber &&
+                                paymentErrors.cardNumber
+                              )}
+
+                              aria-describedby={
+                                paymentErrors.cardNumber
+                                  ? "cardNumber-error"
+                                  : undefined
+                              }
                               required
                             />
-
+                              {paymentTouched.cardNumber &&
+                                paymentErrors.cardNumber && (
+                                  <p
+                                    id="cardNumber-error"
+                                    className="form-error-message"
+                                    role="alert"
+                                  >
+                                    {paymentErrors.cardNumber}
+                                  </p>
+                              )}
                             <span
                               className={`card-field-icon ${
                                 detectedCardType ? "card-type-detected" : ""
@@ -1122,8 +1272,36 @@ const handlePaymentChange = (event) => {
                               maxLength={7}
                               value={paymentInfo.expiration}
                               onChange={handlePaymentChange}
+                              onBlur={handlePaymentBlur}
+                              className={
+                                paymentTouched.expiration &&
+                                paymentErrors.expiration
+                                  ? "input-error"
+                                  : ""
+                              }
+
+                              aria-invalid={Boolean(
+                                paymentTouched.expiration &&
+                                paymentErrors.expiration
+                              )}
+
+                              aria-describedby={
+                                paymentErrors.expiration
+                                  ? "expiration-error"
+                                  : undefined
+                              }
                               required
                             />
+                              {paymentTouched.expiration &&
+                              paymentErrors.expiration && (
+                                <p
+                                  id="expiration-error"
+                                  className="form-error-message"
+                                  role="alert"
+                                >
+                                  {paymentErrors.expiration}
+                                </p>
+                            )}
                           </div>
 
                           <div className="form-group">
@@ -1145,8 +1323,36 @@ const handlePaymentChange = (event) => {
                               maxLength={securityCodeLength}
                               value={paymentInfo.securityCode}
                               onChange={handlePaymentChange}
+                              onBlur={handlePaymentBlur}
+                              className={
+                                paymentTouched.securityCode &&
+                                paymentErrors.securityCode
+                                  ? "input-error"
+                                  : ""
+                              }
+
+                              aria-invalid={Boolean(
+                                paymentTouched.securityCode &&
+                                paymentErrors.securityCode
+                              )}
+
+                              aria-describedby={
+                                paymentErrors.securityCode
+                                  ? "securityCode-error"
+                                  : undefined
+                              }
                               required
                             />
+                            {paymentTouched.securityCode &&
+                              paymentErrors.securityCode && (
+                                <p
+                                  id="securityCode-error"
+                                  className="form-error-message"
+                                  role="alert"
+                                >
+                                  {paymentErrors.securityCode}
+                                </p>
+                            )}
                           </div>
                         </div>
 
