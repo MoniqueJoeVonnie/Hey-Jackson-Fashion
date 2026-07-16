@@ -1171,6 +1171,34 @@
   white-space: nowrap;
 }
 
+.review-payment-method {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.review-payment-logo {
+  width: 58px;
+  height: 38px;
+  object-fit: contain;
+  border: 1px solid #e6dce8;
+  border-radius: 9px;
+  background: #fff;
+  padding: 6px 8px;
+
+  margin-top: 4px;
+}
+
+.review-payment-method strong {
+  display: block;
+  margin-bottom: 3px;
+  color: #4b285f;
+}
+
+.review-payment-method p {
+  margin: 0;
+}
+
 /* ===================================
    Confirmation Mobile Styles
 =================================== */

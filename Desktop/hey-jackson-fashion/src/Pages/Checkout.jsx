@@ -1173,7 +1173,6 @@ const handlePaymentBlur = (event) => {
                             aria-describedby={
                               paymentErrors.cardName ? "cardName-error" : undefined
                             }
-                            required
                           />
                             {paymentTouched.cardName &&
                               paymentErrors.cardName && (
@@ -1221,7 +1220,6 @@ const handlePaymentBlur = (event) => {
                                   ? "cardNumber-error"
                                   : undefined
                               }
-                              required
                             />
                               {paymentTouched.cardNumber &&
                                 paymentErrors.cardNumber && (
@@ -1290,7 +1288,6 @@ const handlePaymentBlur = (event) => {
                                   ? "expiration-error"
                                   : undefined
                               }
-                              required
                             />
                               {paymentTouched.expiration &&
                               paymentErrors.expiration && (
@@ -1341,7 +1338,6 @@ const handlePaymentBlur = (event) => {
                                   ? "securityCode-error"
                                   : undefined
                               }
-                              required
                             />
                             {paymentTouched.securityCode &&
                               paymentErrors.securityCode && (
@@ -1499,11 +1495,29 @@ const handlePaymentBlur = (event) => {
                     </button>
                   </div>
 
+                  <div className="review-payment-method">
+                    {detectedCardType && (
+                      <img
+                        src={cardLogos[detectedCardType]}
+                        alt={`${detectedCardType} card`}
+                        className="review-payment-logo"
+                      />
+                    )}
+
+                    <div>
+                      <strong>{detectedCardType || "Credit or Debit Card"}</strong>
+
+                      <p>
+                        Card ending in{" "}
+                        {paymentInfo.cardNumber
+                          .replace(/\D/g, "")
+                          .slice(-4)}
+                      </p>
+                    </div>
+                  </div>
+
                   <p>
-                    Card ending in{" "}
-                    {paymentInfo.cardNumber
-                      .replace(/\D/g, "")
-                      .slice(-4)}
+                    Name on card: {paymentInfo.cardName}
                   </p>
 
                   <p>
