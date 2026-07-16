@@ -219,7 +219,12 @@ const cardLogos = {
   Discover: discoverLogo,
 };
 
-const detectedCardType = getCardType(paymentInfo.cardNumber);
+const detectedCardType = getCardType(
+  paymentInfo.cardNumber
+);
+
+const securityCodeLength =
+  detectedCardType === "American Express" ? 4 : 3;
 
 const handlePaymentChange = (event) => {
   const { name, value, type, checked } = event.target;
@@ -250,10 +255,16 @@ const handlePaymentChange = (event) => {
   }
 
   if (name === "securityCode") {
-    updatedValue = value
-      .replace(/\D/g, "")
-      .slice(0, 4);
-  }
+  const maximumLength =
+    getCardType(paymentInfo.cardNumber) ===
+    "American Express"
+      ? 4
+      : 3;
+
+  updatedValue = value
+    .replace(/\D/g, "")
+    .slice(0, maximumLength);
+}
 
   setPaymentInfo((currentPaymentInfo) => ({
     ...currentPaymentInfo,
@@ -1126,8 +1137,12 @@ const handlePaymentChange = (event) => {
                               type="password"
                               inputMode="numeric"
                               autoComplete="cc-csc"
-                              placeholder="CVV"
-                              maxLength={4}
+                              placeholder={
+                                detectedCardType === "American Express"
+                                  ? "4-digit code"
+                                  : "3-digit code"
+                              }
+                              maxLength={securityCodeLength}
                               value={paymentInfo.securityCode}
                               onChange={handlePaymentChange}
                               required
