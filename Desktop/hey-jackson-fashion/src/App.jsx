@@ -23,6 +23,10 @@ import Cart from "./Pages/Cart";
 import Checkout from "./Pages/Checkout";
 import Orders from "./Pages/Orders";
 import OrderDetails from "./pages/OrderDetails";
+import CheckoutReview from "./Pages/CheckoutReview";
+import OrderConfirmation from "./Pages/OrderConfirmation";
+import Footer from "./components/Footer";
+import Contact from "./Pages/Contact";
 
 
 
@@ -205,43 +209,9 @@ useEffect(() => {
 
   </div>
 
-  <footer className="footer">
-  <div className="footer-content">
-    <div className="footer-brand">
-      <h2>Hey Jackson! Fashion</h2>
-      <p>Luxury fashion and accessories for stylish pups.</p>
-    </div>
+  <Footer />
 
-    <div className="footer-links">
-      <div>
-        <h3>Shop</h3>
-        <p>New Arrivals</p>
-        <p>Best Sellers</p>
-        <p>Combo Deals</p>
-        <p>Accessories</p>
-      </div>
-
-      <div>
-        <h3>Help</h3>
-        <p>Shipping</p>
-        <p>Returns</p>
-        <p>FAQ</p>
-        <p>Contact</p>
-      </div>
-
-      <div>
-        <h3>Follow Us</h3>
-        <p>TikTok</p>
-        <p>Instagram</p>
-        <p>Facebook</p>
-      </div>
-    </div>
-
-    <div className="footer-bottom">
-      <p>© 2026 Hey Jackson! Fashion. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+  
             </>
           }
         />
@@ -301,7 +271,20 @@ useEffect(() => {
             element={<OrderDetails />}
           />
 
-          <Route path="/orders" element={<Orders />} />
+          <Route
+            path="/checkout/review"
+            element={<CheckoutReview />}
+          />
+
+          <Route
+            path="/checkout/confirmation/:orderId"
+            element={<OrderConfirmation />}
+          />
+
+          <Route 
+            path="/contact" 
+            element={<Contact />} 
+          />
 
       </Routes>
     </>

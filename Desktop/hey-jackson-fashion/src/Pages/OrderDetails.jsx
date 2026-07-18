@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import "../styles/OrderDetails.css";
+import Footer from "../components/Footer";
 
 function OrderDetails() {
   const { orderId } = useParams();
@@ -305,6 +306,18 @@ function OrderDetails() {
         </div>
       </div>
     </main>
+  );
+
+    return (
+    <>
+      <Navbar />
+
+      <main className="product-page">
+        {/* existing product page content */}
+      </main>
+
+      <Footer />
+    </>
   );
 }
 

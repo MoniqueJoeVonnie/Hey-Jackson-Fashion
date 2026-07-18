@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import "../styles/Orders.css";
+import Navbar from "../components/Navbar";
+import Footer from "../components/Footer";
 
 function Orders() {
   let savedOrders = [];
@@ -20,17 +22,20 @@ function Orders() {
     }).format(Number(amount) || 0);
 
   return (
-    <div className="orders-page">
-      <main className="orders-main">
-        <header className="orders-heading">
-          <p>YOUR ACCOUNT</p>
+    <>
+      <Navbar />
 
-          <h1>My Orders</h1>
+      <div className="orders-page">
+        <main className="orders-main">
+          <header className="orders-heading">
+            <p>YOUR ACCOUNT</p>
 
-          <span>
-            Review your recent Hey Jackson! Fashion purchases.
-          </span>
-        </header>
+            <h1>My Orders</h1>
+
+            <span>
+              Review your recent Hey Jackson! Fashion purchases.
+            </span>
+          </header>
 
         {savedOrders.length === 0 ? (
           <section className="orders-empty-card">
@@ -154,7 +159,10 @@ function Orders() {
         )}
       </main>
     </div>
-  );
-}
 
-export default Orders;
+    <Footer />
+  </>
+    );
+  }
+
+  export default Orders;

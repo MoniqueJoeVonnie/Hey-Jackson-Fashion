@@ -10,118 +10,149 @@ function CheckoutReview() {
   const { cartItems, clearCart } = useCart();
 
   function handlePlaceOrder() {
-    if (cartItems.length === 0) {
-      return;
-    }
+  if (cartItems.length === 0) {
+    return;
+  }
 
-    const subtotal = cartItems.reduce((total, item) => {
-      const price =
-        typeof item.price === "number"
-          ? item.price
-          : Number(
-              String(item.price)
-                .replace("$", "")
-                .replace(",", "")
-            );
+  const subtotal = cartItems.reduce((total, item) => {
+    const price =
+      typeof item.price === "number"
+        ? item.price
+        : Number(
+            String(item.price)
+              .replace("$", "")
+              .replace(",", "")
+          );
 
-      return total + price * item.quantity;
-    }, 0);
+    return total + price * item.quantity;
+  }, 0);
 
-    const shipping = subtotal >= 50 ? 0 : 6.99;
-    const tax = subtotal * 0.06;
-    const total = subtotal + shipping + tax;
+  const shipping = subtotal >= 50 ? 0 : 6.99;
+  const tax = subtotal * 0.06;
+  const total = subtotal + shipping + tax;
 
-    const today = new Date();
+  const today = new Date();
 
-    const deliveryStart = new Date(today);
-    deliveryStart.setDate(today.getDate() + 5);
+  const deliveryStart = new Date(today);
+  deliveryStart.setDate(today.getDate() + 5);
 
-    const deliveryEnd = new Date(today);
-    deliveryEnd.setDate(today.getDate() + 8);
+  const deliveryEnd = new Date(today);
+  deliveryEnd.setDate(today.getDate() + 8);
 
-    const savedPayment = JSON.parse(
+  let shippingAddress = {};
+  let savedPayment = {};
+
+  try {
+    shippingAddress = JSON.parse(
+      localStorage.getItem("heyJacksonShipping") || "{}"
+    );
+  } catch (error) {
+    console.error(
+      "Unable to load shipping information:",
+      error
+    );
+  }
+
+  try {
+    savedPayment = JSON.parse(
       localStorage.getItem("heyJacksonPayment") || "{}"
     );
+  } catch (error) {
+    console.error(
+      "Unable to load payment information:",
+      error
+    );
+  }
 
-    const paymentMethod = {
-      cardType: savedPayment.cardType || "Credit Card",
-      lastFour:
-        savedPayment.lastFour ||
-        savedPayment.cardNumber?.replace(/\D/g, "").slice(-4) ||
-        "",
-    };
+  const paymentMethod = {
+    cardType:
+      savedPayment.cardType ||
+      savedPayment.type ||
+      "Credit or Debit Card",
 
+    lastFour:
+      savedPayment.lastFour ||
+      savedPayment.cardNumber
+        ?.replace(/\D/g, "")
+        .slice(-4) ||
+      "",
+  };
 
-    let paymentMethod = null;
+  const orderId = `HJF-${today
+    .toISOString()
+    .slice(0, 10)
+    .replaceAll("-", "")}-${Math.floor(
+    1000 + Math.random() * 9000
+  )}`;
 
-    try {
-      paymentMethod = JSON.parse(
-        localStorage.getItem("heyJacksonPayment") || "null"
-      );
-    } catch (error) {
-      console.error(
-        "Unable to load payment summary:",
-        error
-      );
-    }
+  const newOrder = {
+    id: orderId,
 
-    const newOrder = {
-      id: `HJ-${today.getFullYear()}-${Date.now()
-        .toString()
-        .slice(-6)}`,
+    submittedAt: today.toISOString(),
 
-      submittedAt: today.toISOString(),
+    formattedDate: today.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
 
-      formattedDate: today.toLocaleDateString("en-US", {
+    formattedTime: today.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+    }),
+
+    estimatedDelivery: `${deliveryStart.toLocaleDateString(
+      "en-US",
+      {
         month: "long",
         day: "numeric",
-        year: "numeric",
-      }),
+      }
+    )} – ${deliveryEnd.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    })}`,
 
-      estimatedDelivery: `${deliveryStart.toLocaleDateString(
-        "en-US",
-        {
-          month: "long",
-          day: "numeric",
-        }
-      )} – ${deliveryEnd.toLocaleDateString("en-US", {
-        month: "long",
-        day: "numeric",
-      })}`,
+    status: "Order Submitted",
+    items: [...cartItems],
+    shippingAddress,
+    paymentMethod,
+    subtotal,
+    shipping,
+    tax,
+    total,
+  };
 
-      status: "Order Submitted",
+  let savedOrders = [];
 
-      items: cartItems,
-
-      shippingAddress,
-      paymentMethod,
-      subtotal,
-      shipping,
-      tax,
-      total,
-    };
-
-    let savedOrders = [];
-
-    try {
-      savedOrders = JSON.parse(
-        localStorage.getItem("heyJacksonOrders") || "[]"
-      );
-    } catch (error) {
-      console.error("Could not read saved orders:", error);
-    }
-
-    const updatedOrders = [newOrder, ...savedOrders];
-
-    localStorage.setItem(
-      "heyJacksonOrders",
-      JSON.stringify(updatedOrders)
+  try {
+    const storedOrders = JSON.parse(
+      localStorage.getItem("heyJacksonOrders") || "[]"
     );
 
-    clearCart();
-
-    navigate("/orders");
+    savedOrders = Array.isArray(storedOrders)
+      ? storedOrders
+      : [];
+  } catch (error) {
+    console.error(
+      "Could not read saved orders:",
+      error
+    );
   }
+
+  localStorage.setItem(
+    "heyJacksonOrders",
+    JSON.stringify([newOrder, ...savedOrders])
+  );
+
+  localStorage.setItem(
+    "heyJacksonLatestOrder",
+    JSON.stringify(newOrder)
+  );
+
+  clearCart();
+
+  navigate(`/checkout/confirmation/${orderId}`);
+}
 
   return (
   <div className="checkout-layout">

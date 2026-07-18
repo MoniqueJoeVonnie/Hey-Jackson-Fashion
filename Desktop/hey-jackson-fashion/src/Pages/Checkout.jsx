@@ -445,7 +445,7 @@ const handlePaymentBlur = (event) => {
 
         subtotal,
         shipping,
-        estimatedTax,
+        tax: estimatedTax,
         total,
         itemCount: cartCount,
         status: "Order Submitted",
@@ -1859,9 +1859,7 @@ const handlePaymentBlur = (event) => {
                       <div>
                         <span>Estimated Tax</span>
                         <span>
-                          {formatCurrency(
-                            completedOrder.estimatedTax
-                          )}
+                          {formatCurrency(completedOrder.tax ?? completedOrder.estimatedTax)}
                         </span>
                       </div>
 
