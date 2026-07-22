@@ -1,32 +1,81 @@
+import { lazy, Suspense } from "react";
 import Navbar from "./components/Navbar";
 import "./App.css";
 import sneakerCollection from "./assets/Sneaker collection.png";
-import ProductDetail from "./Pages/ProductDetail";
-import CategoryPage from "./Pages/CategoryPage";
-import ProductPage from "./Pages/Product";
-import Cart from "./Pages/Cart";
-import Checkout from "./Pages/Checkout";
-import Orders from "./Pages/Orders";
-import OrderDetails from "./Pages/OrderDetails";
-import CheckoutReview from "./Pages/CheckoutReview";
-import OrderConfirmation from "./Pages/OrderConfirmation";
 import Footer from "./components/Footer";
 import PageTransition from "./components/PageTransition";
-import Contact from "./Pages/Contact";
-import FAQ from "./Pages/FAQ";
-import Search from "./Pages/Search";
 import {
   Routes,
   Route,
   useLocation,
 } from "react-router-dom";
-import Wishlist from "./pages/Wishlist";
 import { AnimatePresence } from "framer-motion";
-import Home from "./Pages/Home";
 import ScrollToTop from "./components/ScrollToTop";
 import BackToTop from "./components/BackToTop";
 
 
+
+
+
+const Home = lazy(() =>
+  import("./Pages/Home")
+);
+
+const ProductDetail = lazy(() =>
+  import("./Pages/ProductDetail")
+);
+
+const CategoryPage = lazy(() =>
+  import("./Pages/CategoryPage")
+);
+
+const ProductPage = lazy(() =>
+  import("./Pages/Product")
+);
+
+const Cart = lazy(() =>
+  import("./Pages/Cart")
+);
+
+const Checkout = lazy(() =>
+  import("./Pages/Checkout")
+);
+
+const Orders = lazy(() =>
+  import("./Pages/Orders")
+);
+
+const OrderDetails = lazy(() =>
+  import("./Pages/OrderDetails")
+);
+
+const CheckoutReview = lazy(() =>
+  import("./Pages/CheckoutReview")
+);
+
+const OrderConfirmation = lazy(() =>
+  import("./Pages/OrderConfirmation")
+);
+
+const Contact = lazy(() =>
+  import("./Pages/Contact")
+);
+
+const FAQ = lazy(() =>
+  import("./Pages/FAQ")
+);
+
+const Search = lazy(() =>
+  import("./Pages/Search")
+);
+
+const Wishlist = lazy(() =>
+  import("./pages/Wishlist")
+);
+
+const NotFound = lazy(() =>
+  import("./Pages/NotFound")
+);
 
 function App() {
   const location = useLocation();
@@ -36,11 +85,22 @@ return (
     <ScrollToTop />
     <BackToTop />
 
-  <AnimatePresence mode="wait">
-          <Routes
-            location={location}
-            key={location.pathname}
-          >
+    <Suspense
+      fallback={
+        <div className="page-loading">
+          <div className="page-loading-spinner">
+            🐾
+          </div>
+
+          <p>Loading Hey Jackson! Fashion...</p>
+        </div>
+      }
+    >
+      <AnimatePresence mode="wait">
+        <Routes
+          location={location}
+          key={location.pathname}
+        >
 
           <Route
             path="/"
@@ -152,10 +212,20 @@ return (
           }
         />
 
-            </Routes>
-    </AnimatePresence>
+        <Route
+          path="*"
+          element={
+            <PageTransition>
+              <NotFound />
+            </PageTransition>
+          }
+        />
+
+        </Routes>
+      </AnimatePresence>
+    </Suspense>
   </>
-  );
+);
 }
 
 export default App;
