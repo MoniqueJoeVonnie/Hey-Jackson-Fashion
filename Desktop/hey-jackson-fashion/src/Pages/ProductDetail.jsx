@@ -1,9 +1,20 @@
 import { Link, useParams } from "react-router-dom";
+import {
+  FaHeart,
+  FaRegHeart,
+} from "react-icons/fa";
 import { products } from "../data/products";
-import { useState, useEffect } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "../styles/ProductDetail.css";
 import { useCart } from "../context/CartContext";
+import MiniCart from "../components/MiniCart";
+import { useWishlist } from "../context/WishlistContext";
 import Footer from "../components/Footer";
+
 
 function ProductDetail() {
   const { productId } = useParams();
@@ -21,7 +32,26 @@ function ProductDetail() {
   const [selectedImage, setSelectedImage] =
     useState("");
 
+  const [justAdded, setJustAdded] = 
+    useState(false);
+
+  const [miniCartOpen, setMiniCartOpen] =
+  useState(false);  
+
+  const productImageRef = useRef(null);  
+
   const { addToCart } = useCart();
+
+  const { 
+    addToWishlist, 
+    removeFromWishlist, 
+    isInWishlist,
+    toggleWishlist,
+  } = useWishlist();
+
+  const productIsWishlisted = product
+  ? isInWishlist(product.id)
+  : false;
 
   useEffect(() => {
     if (!product) return;
@@ -55,6 +85,78 @@ function ProductDetail() {
     }
   }, [selectedVariant]);
 
+function animateProductToCart() {
+  const productImage = productImageRef.current;
+  const cartLink = document.querySelector(
+    ".navbar-cart-link"
+  );
+
+  if (!productImage || !cartLink) return;
+
+  const imageRect =
+    productImage.getBoundingClientRect();
+
+  const cartRect =
+    cartLink.getBoundingClientRect();
+
+  const destinationX =
+    cartRect.left +
+    cartRect.width / 2 -
+    imageRect.left -
+    imageRect.width / 2;
+
+  const destinationY =
+    cartRect.top +
+    cartRect.height / 2 -
+    imageRect.top -
+    imageRect.height / 2;
+
+  const flyingWrapper =
+    document.createElement("div");
+
+  const flyingImage =
+    productImage.cloneNode(true);
+
+  flyingWrapper.className =
+    "flying-product-wrapper";
+
+  flyingImage.className =
+    "flying-product-image";
+
+  flyingWrapper.style.left =
+    `${imageRect.left}px`;
+
+  flyingWrapper.style.top =
+    `${imageRect.top}px`;
+
+  flyingWrapper.style.width =
+    `${imageRect.width}px`;
+
+  flyingWrapper.style.height =
+    `${imageRect.height}px`;
+
+  flyingWrapper.appendChild(flyingImage);
+  document.body.appendChild(flyingWrapper);
+
+  requestAnimationFrame(() => {
+    flyingWrapper.style.transform =
+      `translateX(${destinationX}px)`;
+
+    flyingImage.style.transform =
+      `translateY(${destinationY}px) scale(0.08)`;
+
+    flyingImage.style.opacity = "0.15";
+  });
+
+  flyingWrapper.addEventListener(
+    "transitionend",
+    () => {
+      flyingWrapper.remove();
+    },
+    { once: true }
+  );
+}
+
   const handleAddToCart = () => {
     if (
       product.sizes?.length &&
@@ -67,13 +169,35 @@ function ProductDetail() {
       return;
     }
 
+    animateProductToCart();
+
+    setTimeout(() => {
+      setMiniCartOpen(true);
+    }, 700);
+
     addToCart(
       product,
       selectedColor,
       selectedSize,
       selectedImage
     );
+
+      setJustAdded(true);
+
+      setTimeout(() => {
+        setJustAdded(false);
+      }, 2000);
   };
+
+  function handleWishlistClick() {
+    if (!product) return;
+
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  }
 
   if (!product) {
     return (
@@ -115,15 +239,18 @@ function ProductDetail() {
 
         <div className="product-detail-layout">
           <div className="product-image-column">
-            <img
-              key={selectedImage}
-              src={selectedImage}
-              alt={
-                selectedVariant?.name ||
-                product.name
-              }
-              className="product-main-image"
-            />
+            {selectedImage && (
+              <img
+                ref={productImageRef}
+                key={selectedImage}
+                src={selectedImage}
+                alt={
+                  selectedVariant?.name ||
+                  product.name
+                }
+                className="product-main-image"
+              />
+            )}
           </div>
 
           <div className="product-detail-info">
@@ -159,12 +286,12 @@ function ProductDetail() {
                           )
                         }
                       >
-                        <img
-                          src={
-                            variant.thumbnail
-                          }
-                          alt={variant.name}
-                        />
+                        {variant.thumbnail && (
+                          <img
+                            src={variant.thumbnail}
+                            alt={variant.name}
+                          />
+                        )}
 
                         <span>
                           {variant.name}
@@ -203,13 +330,45 @@ function ProductDetail() {
               </>
             )}
 
-            <button
-              type="button"
-              className="add-to-cart-btn"
-              onClick={handleAddToCart}
-            >
-              Add to Cart
-            </button>
+            <div className="product-actions">
+              <button
+                type="button"
+                className={`add-to-cart-button ${
+                  justAdded ? "added" : ""
+                }`}
+                onClick={handleAddToCart}
+              >
+                {justAdded ? "✓ Added!" : "Add to Cart"}
+              </button>
+
+              <button
+                type="button"
+                className={
+                  productIsWishlisted
+                    ? "product-detail-wishlist active"
+                    : "product-detail-wishlist"
+                }
+                onClick={handleWishlistClick}
+                aria-label={
+                  productIsWishlisted
+                    ? `Remove ${product.name} from wishlist`
+                    : `Add ${product.name} to wishlist`
+                }
+                aria-pressed={productIsWishlisted}
+              >
+                {productIsWishlisted ? (
+                  <>
+                    <FaHeart />
+                    Saved to Wishlist
+                  </>
+                ) : (
+                  <>
+                    <FaRegHeart />
+                    Add to Wishlist
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -268,29 +427,27 @@ function ProductDetail() {
                     return null;
                   }
 
+                  const relatedImage =
+                    relatedProduct.recommendationImage ||
+                    relatedProduct.image ||
+                    null;
+
                   return (
                     <Link
                       key={relatedProduct.id}
                       to={`/products/${relatedProduct.id}`}
                       className="complete-look-card"
                     >
-                      <img
-                        src={
-                          relatedProduct.recommendationImage ||
-                          relatedProduct.image
-                        }
-                        alt={
-                          relatedProduct.name
-                        }
-                      />
+                      {relatedImage && (
+                        <img
+                          src={relatedImage}
+                          alt={relatedProduct.name}
+                        />
+                      )}
 
-                      <h3>
-                        {relatedProduct.name}
-                      </h3>
+                      <h3>{relatedProduct.name}</h3>
 
-                      <p>
-                        {relatedProduct.price}
-                      </p>
+                      <p>{relatedProduct.price}</p>
                     </Link>
                   );
                 }
@@ -301,6 +458,11 @@ function ProductDetail() {
       </main>
 
       <Footer />
+
+      <MiniCart
+        isOpen={miniCartOpen}
+        onClose={() => setMiniCartOpen(false)}
+      />
     </>
   );
 }

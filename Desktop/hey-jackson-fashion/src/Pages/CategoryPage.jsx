@@ -1,10 +1,20 @@
 import { Link, useParams } from "react-router-dom";
+import {
+  FaHeart,
+  FaRegHeart,
+} from "react-icons/fa";
 import { products } from "../data/products";
+import { useWishlist } from "../context/WishlistContext";
 import "../styles/ProductPage.css";
 import Footer from "../components/Footer";
 
 function CategoryPage() {
   const { categoryName } = useParams();
+
+  const {
+    toggleWishlist,
+    isInWishlist,
+  } = useWishlist();
 
   const categoryTitles = {
     clothing: "Pet Clothing",
@@ -49,13 +59,30 @@ function CategoryPage() {
               <div className="product-image-wrap">
                 <button
                   type="button"
-                  className="wishlist-btn"
-                  aria-label={`Add ${product.name} to favorites`}
+                  className={
+                    isInWishlist(product.id)
+                      ? "wishlist-btn active"
+                      : "wishlist-btn"
+                  }
+                  aria-label={
+                    isInWishlist(product.id)
+                      ? `Remove ${product.name} from wishlist`
+                      : `Add ${product.name} to wishlist`
+                  }
+                  aria-pressed={isInWishlist(
+                    product.id
+                  )}
                   onClick={(event) => {
                     event.preventDefault();
+                    event.stopPropagation();
+                    toggleWishlist(product);
                   }}
                 >
-                  ♡
+                  {isInWishlist(product.id) ? (
+                    <FaHeart />
+                  ) : (
+                    <FaRegHeart />
+                  )}
                 </button>
 
                 <img
@@ -79,8 +106,7 @@ function CategoryPage() {
                   🐾 Colors & Sizes Available
                 </p>
 
-                {product.variants?.length >
-                  0 && (
+                {product.variants?.length > 0 && (
                   <div className="color-swatches">
                     {product.variants.map(
                       (variant) => (

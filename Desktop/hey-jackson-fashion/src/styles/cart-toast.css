@@ -115,3 +115,50 @@
     animation: none;
   }
 }
+
+
+
+
+/* Wishlist Added */
+
+.cart-toast--wishlist {
+  border-left: 5px solid #ff4fa3;
+}
+
+.cart-toast--wishlist .cart-toast-icon {
+  background: #ff4fa3;
+  color: white;
+}
+
+/* Wishlist Removed */
+
+.cart-toast--wishlist-remove {
+  border-left: 5px solid #d9277d;
+}
+
+.cart-toast--wishlist-remove .cart-toast-icon {
+  background: #d9277d;
+  color: white;
+}
+
+/* Wishlist Added */
+
+.cart-toast--wishlist {
+  border-left: 5px solid #ff4fa3;
+}
+
+.cart-toast--wishlist .cart-toast-icon {
+  background: #ff4fa3;
+  color: white;
+}
+
+/* Wishlist Removed */
+
+.cart-toast--wishlist-remove {
+  border-left: 5px solid #d9277d;
+}
+
+.cart-toast--wishlist-remove .cart-toast-icon {
+  background: #d9277d;
+  color: white;
+}

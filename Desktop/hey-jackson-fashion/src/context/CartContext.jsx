@@ -2,23 +2,20 @@ import {
   createContext,
   useContext,
   useEffect,
-  useRef,
   useState,
 } from "react";
 
-import "../styles/cart-toast.css";
+import { useToast } from "./ToastContext";
 
 const CartContext = createContext();
 
 export function CartProvider({ children }) {
+  const { showToast } = useToast();
   const [cartItems, setCartItems] = useState(() => {
     const savedCart = localStorage.getItem("heyJacksonCart");
 
     return savedCart ? JSON.parse(savedCart) : [];
   });
-
-  const [toast, setToast] = useState(null);
-  const toastTimerRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem(
@@ -26,34 +23,6 @@ export function CartProvider({ children }) {
       JSON.stringify(cartItems)
     );
   }, [cartItems]);
-
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current) {
-        clearTimeout(toastTimerRef.current);
-      }
-    };
-  }, []);
-
-  function showToast({
-    title,
-    message = "",
-    type = "success",
-  }) {
-    if (toastTimerRef.current) {
-      clearTimeout(toastTimerRef.current);
-    }
-
-    setToast({
-      title,
-      message,
-      type,
-    });
-
-    toastTimerRef.current = setTimeout(() => {
-      setToast(null);
-    }, 3000);
-  }
 
   function addToCart(
     product,
@@ -204,36 +173,8 @@ export function CartProvider({ children }) {
         cartCount,
       }}
     >
+      
       {children}
-
-      {toast && (
-        <div
-          className={`cart-toast cart-toast--${toast.type}`}
-          role="status"
-          aria-live="polite"
-        >
-          <div className="cart-toast-icon">
-            {toast.type === "success" ? "✓" : "×"}
-          </div>
-
-          <div className="cart-toast-content">
-            <strong>{toast.title}</strong>
-
-            {toast.message && (
-              <span>{toast.message}</span>
-            )}
-          </div>
-
-          <button
-            type="button"
-            className="cart-toast-close"
-            onClick={() => setToast(null)}
-            aria-label="Close notification"
-          >
-            ×
-          </button>
-        </div>
-      )}
     </CartContext.Provider>
   );
 }
