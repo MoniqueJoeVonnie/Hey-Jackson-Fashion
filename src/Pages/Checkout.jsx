@@ -180,12 +180,19 @@ function Checkout() {
     return;
   }
 
-  if (shippingInfo.saveAddress) {
-    localStorage.setItem(
-      "heyJacksonShippingInfo",
+  // Save shipping details for the current checkout.
+    sessionStorage.setItem(
+      "heyJacksonCheckoutShipping",
       JSON.stringify(shippingInfo)
     );
-  }
+
+    // Save for future checkouts only when requested.
+    if (shippingInfo.saveAddress) {
+      localStorage.setItem(
+        "heyJacksonShippingInfo",
+        JSON.stringify(shippingInfo)
+      );
+    }
 
   setCheckoutStep(2);
 

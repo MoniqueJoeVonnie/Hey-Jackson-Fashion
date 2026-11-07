@@ -133,33 +133,47 @@ function OrderDetails() {
               <h2>Shipping Address</h2>
             </div>
 
+            
             {order.shippingAddress ? (
               <address>
                 <strong>
-                  {order.shippingAddress.firstName}{" "}
-                  {order.shippingAddress.lastName}
+                  {order.shippingAddress.fullName ||
+                    [
+                      order.shippingAddress.firstName,
+                      order.shippingAddress.lastName,
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
                 </strong>
 
                 <span>
-                  {order.shippingAddress.address}
+                  {order.shippingAddress.address ||
+                    order.shippingAddress.address1 ||
+                    ""}
                 </span>
 
-                {order.shippingAddress.apartment && (
+                {(order.shippingAddress.apartment ||
+                  order.shippingAddress.address2) && (
                   <span>
-                    {order.shippingAddress.apartment}
+                    {order.shippingAddress.apartment ||
+                      order.shippingAddress.address2}
                   </span>
                 )}
 
                 <span>
-                  {order.shippingAddress.city},{" "}
-                  {order.shippingAddress.state}{" "}
-                  {order.shippingAddress.zipCode}
+                  {[
+                    order.shippingAddress.city,
+                    order.shippingAddress.state,
+                    order.shippingAddress.zipCode ||
+                      order.shippingAddress.zip,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
                 </span>
               </address>
             ) : (
               <p className="order-information-unavailable">
-                Shipping details were not saved with this
-                order.
+                Shipping details were not saved with this order.
               </p>
             )}
           </section>

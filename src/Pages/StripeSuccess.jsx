@@ -259,9 +259,18 @@ function createCompletedOrder({
     deliveryEnd.getDate() + 8
   );
 
-  const shippingAddress = readStorageObject(
-    "heyJacksonShipping"
-  );
+  const shippingAddress = (() => {
+  try {
+    const currentCheckout = JSON.parse(
+      sessionStorage.getItem("heyJacksonCheckoutShipping") || "null"
+    );
+
+    return currentCheckout || readStorageObject("heyJacksonShippingInfo");
+  } catch (error) {
+    console.error("Unable to read checkout shipping information:", error);
+    return readStorageObject("heyJacksonShippingInfo");
+  }
+})();
 
   const savedPayment = readStorageObject(
     "heyJacksonPayment"
@@ -274,6 +283,14 @@ function createCompletedOrder({
   const total =
     Number(stripeSession.amountTotal || 0) /
     100;
+
+  const shipping =
+    Number(stripeSession.amountShipping || 0) /
+    100;
+
+  const tax =
+    Number(stripeSession.amountTax || 0) /
+    100;  
 
   const orderId = `HJF-${today
     .toISOString()
@@ -359,6 +376,13 @@ function createCompletedOrder({
         "",
 
       fullName:
+        [
+          shippingAddress.firstName,
+          shippingAddress.lastName,
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .trim() ||
         shippingAddress.fullName ||
         stripeSession.customerName ||
         "",
@@ -366,8 +390,7 @@ function createCompletedOrder({
 
     paymentMethod: {
       cardType:
-        savedPayment.cardType ||
-        "Stripe",
+        savedPayment.cardType || "Stripe",
 
       lastFour:
         savedPayment.lastFour ||
@@ -382,8 +405,8 @@ function createCompletedOrder({
     // Stripe currently only receives product
     // line items, so these remain zero until
     // shipping and tax are added to the session.
-    shipping: 0,
-    tax: Math.max(total - subtotal, 0),
+    shipping,
+    tax,
 
     total,
     currency:
