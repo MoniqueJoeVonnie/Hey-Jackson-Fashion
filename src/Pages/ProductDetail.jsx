@@ -629,7 +629,8 @@ function ProductDetail() {
               </>
             )}
 
-            {product.sizes?.length > 0 && (
+            {product.id !== "new-york-yankees-mlb-pet-jersey" &&
+              product.sizes?.length > 0 && (
               <>
                 <label>Size</label>
 
@@ -656,18 +657,49 @@ function ProductDetail() {
               </>
             )}
 
-            <div className="product-actions">
-              <button
-                type="button"
-                className={`add-to-cart-button ${
-                  justAdded ? "added" : ""
-                }`}
-                onClick={handleAddToCart}
-              >
-                {justAdded
-                  ? "✓ Added!"
-                  : "Add to Cart"}
-              </button>
+          {product?.id === "new-york-yankees-mlb-pet-jersey" && (
+            <p
+              style={{
+                margin: "12px 0",
+                color: "#5b2c6f",
+                fontSize: "14px",
+                fontWeight: "600",
+                lineHeight: "1.6",
+              }}
+            >
+              🐾 Choose Your Size at PayPal Checkout
+              <span style={{ display: "block", fontWeight: "400" }}>
+                Select your jersey size (XS–3XL) on the secure PayPal
+                checkout page before completing your purchase.
+              </span>
+            </p>
+          )}
+
+           <div className="product-actions">
+           {product?.id !== "new-york-yankees-mlb-pet-jersey" && (
+            <button
+              type="button"
+              className={`add-to-cart-button ${
+                justAdded ? "added" : ""
+              }`}
+              onClick={handleAddToCart}
+            >
+              {justAdded ? "✓ Added!" : "Add to Cart"}
+            </button>
+          )}
+
+
+              {product?.id === "new-york-yankees-mlb-pet-jersey" && (
+                <a
+                  href="https://www.paypal.com/ncp/payment/QNHHJWMUV98NG"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="yankees-paypal-button"
+                >
+                  Buy Now with PayPal
+                </a>
+              )}
+
 
               <button
                 type="button"
@@ -809,6 +841,7 @@ function ProductDetail() {
             product.completeTheLook
           }
         />
+
 
         <RecentlyViewed
           currentProductId={product.id}

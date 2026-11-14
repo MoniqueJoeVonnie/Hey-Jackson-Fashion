@@ -1,6 +1,6 @@
 import { sportyJersey } from "./SportyJersey";
-import { designerPawProtectors } from "./DesignerPawProtectors";
-import { stepInHarness } from "./StepInHarness";
+ // import { designerPawProtectors } from "./DesignerPawProtectors";
+ // import { stepInHarness } from "./StepInHarness";
 import { wasteBagDispenser } from "./WasteBagDispenser";
 import { zebraPupScruff } from "./ZebraPupScruff";
 import { petBowls } from "./PetBowls";
@@ -23,16 +23,53 @@ import { classicLetterSweatshirtHoodie } from "./ClassicLetterSweatshirtHoodie";
 import { sleevelessStripedHoodie } from "./SleevelessStripedHoodie";
 import { classicPlaidCollarTankTop } from "./PlaidTrimTankTop";
 import { theLibertyLuxeDogTee } from "./TheLibertyLuxeDogTee";
+ // import { buffaloPlaidBowtieTee } from "./BuffaloPlaidBowtieTee";
+import { dapperDogBlackTie } from "./DapperDogBlackTie";
+import { designerDapperDogTee } from "./DesignerDapperDogTee";
+ // import { frenchPolynesiaTee } from "./FrenchPolynesiaTee";
+ // import { frenchieSequinTee } from "./FrenchieSequinTee";
+ // import { glitterazziFrenchieTee } from "./GlitterazziFrenchieTee";
+import { handsomeLittleDevil } from "./HandsomeLittleDevil";
+import { hollowOutLaceTee } from "./HollowOutLaceTee";
+ // import { humbleWithAHintOfKanye } from "./HumbleWithAHintOfKanye";
+ // import { preppyPupStripedBearTee } from "./PreppyPupStripedBearTee";
+import { barbieKnitDogSweater } from "./BarbieKnitDogSweater";
+ // import { cozyChewnelKnitDogSweater } from "./CozyChewnelKnitDogSweater";
+ // import { cozyHolidaySweater } from "./CozyHolidaySweater";
+import { pinkBobbleStitchSweater } from "./PinkBobbleStitchSweater";
+import { pearlKnitSweater } from "./PearlKnitSweater";
+import { sniffanyDogKnitSweater } from "./SniffanyDogKnitSweater";
+import { monogramLuxeCardigan } from "./MonogramLuxeCardigan";
+import { poutAndPoshFuzzyDogSweater } from "./PoutAndPoshFuzzyDogSweater";
+import { royalTeddyLuxeKnitSweater } from "./RoyalTeddyLuxeKnitSweater";
+import { monogramTeddyLuxeSweaterVest } from "./MonogramTeddyLuxeSweaterVest";
+import { theParisianBowCoutureSweater } from "./TheParisianBowCoutureSweater";
+import { fleurDeLuxeKnitSweater } from "./FleurDeLuxeKnitSweater";
+import { newYorkYankeesMLBPetJersey } from "./NewYorkYankeesMLBPetJersey";
+
+
+
 
 
 export const products = [
   wasteBagDispenser,
+  pinkBobbleStitchSweater,
+   // preppyPupStripedBearTee,
+  dapperDogBlackTie,
   petBowls,
   chewnelHoodie,
+   // cozyChewnelKnitDogSweater,
   petCarrier,
+  designerDapperDogTee,
+  fleurDeLuxeKnitSweater,
+   // glitterazziFrenchieTee,
+  barbieKnitDogSweater,
+  pearlKnitSweater,
+   // cozyHolidaySweater,
   classicLetterSweatshirtHoodie,
   myCozyBarbieHoodie,
   denimLoveHoodie,
+  monogramLuxeCardigan,
   monogramDesignerKnittedHoodie,
   diorAbleDogHoodie,
   petElastoFitUrbanDogHoodie,
@@ -41,14 +78,26 @@ export const products = [
   influencerDogHoodie,
   cocoJeweledDogHoodie,
   theLibertyLuxeDogTee,
+  handsomeLittleDevil,
   emeraldMosaicHeartHoodie,
-  stepInHarness,
+   // stepInHarness,
   sportyJersey,
   geezLouisHoodie,
   gameOnHoodie,
-  designerPawProtectors,
+  hollowOutLaceTee,
+  theParisianBowCoutureSweater,
+   // designerPawProtectors,
+   // buffaloPlaidBowtieTee,
   classicPlaidCollarTankTop,
+   // frenchPolynesiaTee,
+  poutAndPoshFuzzyDogSweater,
   zebraPupScruff,
+   // frenchieSequinTee,
+  sniffanyDogKnitSweater,
   mommysSpiritAnimalHoodie,
   sleevelessStripedHoodie,
+  royalTeddyLuxeKnitSweater,
+  monogramTeddyLuxeSweaterVest,
+   // humbleWithAHintOfKanye,
+  newYorkYankeesMLBPetJersey,
 ];
