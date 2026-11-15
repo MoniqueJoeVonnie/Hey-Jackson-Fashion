@@ -1473,3 +1473,37 @@
     margin-inline: auto;
   }
 }
+
+
+/* New York Yankees Jersey - PayPal Checkout Button */
+.yankees-paypal-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 48px;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #18cfd2, #138f93);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  box-shadow: 0 8px 18px rgba(24, 207, 210, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.yankees-paypal-button:hover {
+  color: #ffffff;
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(24, 207, 210, 0.25);
+}
+
+.yankees-paypal-button:focus-visible {
+  outline: 3px solid #5b2c6f;
+  outline-offset: 3px;
+}
+
+
